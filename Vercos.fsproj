@@ -5,10 +5,11 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Log.fs" />
-    <Compile Include="ConfigFile.fs" />
-    <Compile Include="Cli.fs" />
-    <Compile Include="Program.fs" />
+    <Compile Include="./src/Log.fs" />
+    <Compile Include="./src/Cli.fs" />
+    <Compile Include="./src/ConfigFile.fs" />
+    <Compile Include="./src/Repository.fs" />
+    <Compile Include="./src/Program.fs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".dockerignore" />
