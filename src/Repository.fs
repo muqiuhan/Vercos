@@ -96,6 +96,18 @@ type Repository(__path, __force) =
             )
         )
 
+    /// Find the root of the current repository
+    static member public Find(path: string, required: bool) =
+        let path = Path.GetFullPath(path)
+        let parent = Path.GetFullPath(Path.Join([| path; ".." |]))
+
+        if Directory.Exists(Path.Join([| path; ".vercos" |])) then
+            Some(Repository(path, false))
+        else if parent = path then
+            if required then Log.Error "No git directory" else None
+        else
+            Repository.Find(parent, required)
+
 
     /// Create a new repository at path
     member public this.Create() =
