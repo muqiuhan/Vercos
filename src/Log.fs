@@ -48,4 +48,6 @@ type Log private () =
 
     static member Warn(message: String) : Unit = Logger.Console.Warn message
 
-    static member Error(message: String) : Unit = Logger.Console.Error message
+    static member Error(message: String) =
+        Logger.Console.Error message
+        failwith $"{message}"
