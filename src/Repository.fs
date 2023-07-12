@@ -4,10 +4,9 @@ open System
 open System.IO
 open Log
 open IniParser
-open IniParser.Model
 
 /// A vercos repository
-type Repository private (__path, __force) =
+type Repository(__path, __force) =
     let __vercosDir = Path.Join([| __path; ".vercos" |])
     let __worktree = __path
 
@@ -72,10 +71,10 @@ type Repository private (__path, __force) =
     /// Create vercos initial file information
     member private this.CreateInitialFileInfo() =
         // .vercos/description
-        use description = File.OpenWrite(this.RepoFile([| "description" |], true).Value)
+        use description = File.OpenWrite(Path.Join([| __vercosDir; "description" |]))
 
         // .vercos/HEAD
-        use HEAD = File.OpenWrite(this.RepoFile([| "HEAD" |], true).Value)
+        use HEAD = File.OpenWrite(Path.Join([| __vercosDir; "HEAD" |]))
 
         description.Write(
             Text.Encoding.UTF8.GetBytes("Unnamed repository; edit this file 'description' to name the repository.\n")
@@ -85,15 +84,25 @@ type Repository private (__path, __force) =
 
     /// Create vercos config file
     member private this.CreateConfigFile() =
-        let configFilePath = Path.Join([| __vercosDir; "config" |])
-        let data = __configFile.ReadFile(configFilePath)
-        data["core"]["repositoryformatversion"] <- "0"
-        data["core"]["filemode"] <- "false"
-        data["core"]["bare"] <- "false"
-        __configFile.WriteFile(configFilePath, data)
+        use config = File.OpenWrite(Path.Join([| __vercosDir; "config" |]))
+
+        config.Write(
+            Text.Encoding.UTF8.GetBytes(
+                """[core]
+    repositoryformatversion = 0
+    filemode = false
+    bare = false
+"""
+            )
+        )
+
 
     /// Create a new repository at path
-    member public this.Create(path: string) =
+    member public this.Create() =
+        Log.Info $"Create a repository on `{__path}` ..."
+
         this.CreateVercosTreeAndCheckIt()
         |> this.CreateInitialFileInfo
         |> this.CreateConfigFile
+
+        Log.Info $"The repository `{__path}` is created!"

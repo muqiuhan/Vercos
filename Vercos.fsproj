@@ -6,9 +6,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="./src/Log.fs" />
-    <Compile Include="./src/Cli.fs" />
     <Compile Include="./src/ConfigFile.fs" />
     <Compile Include="./src/Repository.fs" />
+    <Compile Include="./src/Cli.fs" />
     <Compile Include="./src/Program.fs" />
   </ItemGroup>
   <ItemGroup>

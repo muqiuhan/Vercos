@@ -2,9 +2,10 @@ module Vercos.Cli
 
 open Argu
 open System
+open Repository
 
 type Args =
-    | [<EqualsAssignment>] Init of path: string option
+    | Init of path: string * force: bool
 
     interface IArgParserTemplate with
         member this.Usage =
@@ -29,6 +30,8 @@ type Cli() =
         let args = Cli.parser.Parse(args)
 
         if args.Contains(Init) then
-            args.GetResult(Init) |> ignore
+            let (path, force) = args.GetResult(Init)
+            Repository(path, force).Create()
+
         else
             ()
