@@ -5,9 +5,11 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="./src/Basic.fs" />
     <Compile Include="./src/Log.fs" />
     <Compile Include="./src/ConfigFile.fs" />
     <Compile Include="./src/Repository.fs" />
+    <Compile Include="./src/Object.fs" />
     <Compile Include="./src/Cli.fs" />
     <Compile Include="./src/Program.fs" />
   </ItemGroup>

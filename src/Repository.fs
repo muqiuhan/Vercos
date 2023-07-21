@@ -2,8 +2,11 @@ module Vercos.Repository
 
 open System
 open System.IO
+open System.IO.Compression
+
 open Log
 open IniParser
+open Basic
 
 /// A vercos repository
 type Repository(__path, __force) =
@@ -118,3 +121,44 @@ type Repository(__path, __force) =
         |> this.CreateConfigFile
 
         Log.Info $"The repository `{__path}` is created!"
+
+    member private this.ReadSize(raw: string) =
+        let size = System.Collections.Generic.List<char>()
+
+        try
+            for c in raw do
+                if Char.IsDigit c then size.Add(c) else raise Break
+
+            String.Join("", size)
+        with :? Break ->
+            String.Join("", size)
+
+    /// Read object id from vercos repository.
+    /// Return a Object whose exact type depends on the object.
+    member public this.Read(repo: Repository, sha: string) =
+        let raw =
+            (new StreamReader(
+                new ZLibStream(
+                    File.OpenRead(
+                        this
+                            .RepoFile(
+                                [| "objects"; (sha.Substring(0, 2)); (sha.Substring(2, (sha.Length - 2))) |],
+                                false
+                            )
+                            .Value
+                    ),
+                    CompressionMode.Decompress
+                )
+            ))
+                .ReadToEnd()
+
+        let x = raw.IndexOf(" ")
+        let y = raw.IndexOf("\x00", x)
+
+        let fmt = raw.Substring(0, x)
+        let size = int (raw.Substring(x + 1) |> this.ReadSize)
+
+        if size <> (raw.Length - y - 1) then
+            Log.Error $"Malformed object {sha}: bad length"
+
+        printfn $"{fmt}"
