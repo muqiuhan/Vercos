@@ -1,24 +1,26 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="./src/Basic.fs" />
-    <Compile Include="./src/Log.fs" />
-    <Compile Include="./src/ConfigFile.fs" />
-    <Compile Include="./src/Repository.fs" />
-    <Compile Include="./src/Object.fs" />
-    <Compile Include="./src/Cli.fs" />
-    <Compile Include="./src/Program.fs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include=".dockerignore" />
-    <Content Include="Dockerfile" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Argu" Version="6.1.1" />
-    <PackageReference Include="ini-parser" Version="2.5.2" />
-  </ItemGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net7.0</TargetFramework>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="./src/Basic.fs"/>
+        <Compile Include="./src/Log.fs"/>
+        <Compile Include="./src/ConfigFile.fs"/>
+        <Compile Include="./src/Repository.fs"/>
+        <Compile Include="./src/Object.fs"/>
+        <Compile Include="./src/Cli.fs"/>
+        <Compile Include="./src/Program.fs"/>
+        <Compile Include="src\Object.fs"/>
+        <Compile Include="src\Repository.fs"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include=".dockerignore"/>
+        <Content Include="Dockerfile"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Argu" Version="6.1.1"/>
+        <PackageReference Include="ini-parser" Version="2.5.2"/>
+    </ItemGroup>
 </Project>

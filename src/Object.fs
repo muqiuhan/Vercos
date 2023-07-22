@@ -1,9 +1,6 @@
 module Vercos.Object
 
 open Repository
-open Log
-open System.IO
-open System.IO.Compression
 
 type Object(__repo: Repository, __data: option<string>) as self =
     do

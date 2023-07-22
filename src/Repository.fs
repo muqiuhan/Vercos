@@ -91,7 +91,8 @@ type Repository(__path, __force) =
 
         config.Write(
             Text.Encoding.UTF8.GetBytes(
-                """[core]
+                """
+[core]
     repositoryformatversion = 0
     filemode = false
     bare = false
@@ -133,24 +134,20 @@ type Repository(__path, __force) =
         with :? Break ->
             String.Join("", size)
 
+    member private this.ReadRaw(path: string, sha: string) =
+        (new StreamReader(new ZLibStream(File.OpenRead(path), CompressionMode.Decompress)))
+            .ReadToEnd()
+
     /// Read object id from vercos repository.
     /// Return a Object whose exact type depends on the object.
     member public this.Read(repo: Repository, sha: string) =
         let raw =
-            (new StreamReader(
-                new ZLibStream(
-                    File.OpenRead(
-                        this
-                            .RepoFile(
-                                [| "objects"; (sha.Substring(0, 2)); (sha.Substring(2, (sha.Length - 2))) |],
-                                false
-                            )
-                            .Value
-                    ),
-                    CompressionMode.Decompress
-                )
-            ))
-                .ReadToEnd()
+            this.ReadRaw(
+                this
+                    .RepoFile([| "objects"; sha.Substring(0, 2); sha.Substring(2, (sha.Length - 2)) |], false)
+                    .Value,
+                sha
+            )
 
         let x = raw.IndexOf(" ")
         let y = raw.IndexOf("\x00", x)

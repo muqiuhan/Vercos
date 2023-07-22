@@ -4,5 +4,5 @@ open Cli
 
 [<EntryPoint>]
 let main args =
-    Cli.parse(args)
+    Cli.parse (args)
     0
