@@ -12,8 +12,6 @@
         <Compile Include="./src/Object.fs"/>
         <Compile Include="./src/Cli.fs"/>
         <Compile Include="./src/Program.fs"/>
-        <Compile Include="src\Object.fs"/>
-        <Compile Include="src\Repository.fs"/>
     </ItemGroup>
     <ItemGroup>
         <Content Include=".dockerignore"/>
