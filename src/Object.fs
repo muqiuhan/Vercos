@@ -2,6 +2,7 @@ module Vercos.Object
 
 open Repository
 
+
 type Object(__repo: Repository, __data: option<string>) as self =
     do
         if __data.IsSome then
