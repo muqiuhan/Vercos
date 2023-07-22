@@ -15,19 +15,25 @@ which can be used for teaching and research,
 or secondary development based on this project.
 
 ## Build and Publish
-> This project enables .NET Native AOT construction by default
+This project enables .NET Native AOT construction by default:
+```xml
+<PublishReadyToRun>true</PublishReadyToRun>
+<PublishTrimmed>true</PublishTrimmed>
+<PublishSingleFile>true</PublishSingleFile>
+```
 
 Just: `dotnet publish -c Release -r [Your Platform]`
-
-E.g: `dotnet publish -c Release -r win-x64`
+> E.g: `dotnet publish -c Release -r win-x64`
 
 ## Usage
+
 - ```Vercos --help```
 
 ...
 
 ## Acknowledgements
 - [ini-parser](https://github.com/rickyah/ini-parser): For parsing configuration files
+- [Argu](https://github.com/fsprojects/Argu): For parsing command line arguments
 
 ## LICENSE
 The MIT License (MIT)
