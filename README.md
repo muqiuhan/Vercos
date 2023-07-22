@@ -8,17 +8,26 @@
 
 </div>
 
+## Motivation
+This is not a new Version Control System. 
+It simplifies many features and codes based on the current git,
+which can be used for teaching and research, 
+or secondary development based on this project.
+
 ## Build and Publish
 > This project enables .NET Native AOT construction by default
 
-- Just: `dotnet publish -c Release -r [Your Platform]`
+Just: `dotnet publish -c Release -r [Your Platform]`
+
+E.g: `dotnet publish -c Release -r win-x64`
 
 ## Usage
+- ```Vercos --help```
+
 ...
 
 ## Acknowledgements
-- [ini-parser](https://github.com/rickyah/ini-parser)
-- [Write yourself a git](https://wyag.thb.lt/)
+- [ini-parser](https://github.com/rickyah/ini-parser): For parsing configuration files
 
 ## LICENSE
 The MIT License (MIT)
