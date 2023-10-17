@@ -6,20 +6,23 @@
 
 *A __minimalism__ __cross-platform__ __git-like__ version control system written in F#*
 
+![](https://img.shields.io/badge/.NET%20Core%208.0.100~rc.2-8A2BE2)
+![](https://github.com/muqiuhan/lit/actions/workflows/build.yml/badge.svg)
+
+![](https://img.shields.io/badge/work%20in%20progress-FFFF00)
+
 </div>
 
-## Motivation
-This is not a new Version Control System. 
-It simplifies many features and codes based on the current git,
-which can be used for teaching and research, 
-or secondary development based on this project.
+## Introduction
+This is not a new Version Control System. It simplifies many features and codes based on the current git,
+which can be used for teaching and research, or secondary development based on this project.
 
 ## Build and Publish
+
 This project enables .NET Native AOT construction by default:
 ```xml
-<PublishReadyToRun>true</PublishReadyToRun>
+<PublishAOT>true</PublishReadyAOT>
 <PublishTrimmed>true</PublishTrimmed>
-<PublishSingleFile>true</PublishSingleFile>
 ```
 
 Just: `dotnet publish -c Release -r [Your Platform]`
@@ -27,7 +30,29 @@ Just: `dotnet publish -c Release -r [Your Platform]`
 
 ## Usage
 
-- ```Lit --help```
+```
+USAGE: lit [version] [help] [add] [init] [log] [rm] [tagging] [status] [cat-file] [check-ignore] [checkout] [commit] [hash-object] [ls-files] [ls-tree] [rev-parse] [show-ref]
+
+OPTIONS:
+
+    version               Display version information about lit
+    help                  Display help information about lit
+    add                   Add file contents to the index
+    init                  Create an empty lit repository or reinitialize an existing one
+    log                   Show commit logs
+    rm                    Remove files from the working tree and from the index
+    tagging               Create, list, delete or verify a tag object signed with GPG
+    status                Show the working tree status
+    cat-file              Provide content or type and size information for repository objects
+    check-ignore          Debug gitignore / exclude files
+    checkout              Switch branches or restore working tree files
+    commit                Record changes to the repository
+    hash-object           Compute object ID and optionally create an object from a file
+    ls-files              Show information about files in the index and the working tree
+    ls-tree               List the contents of a tree object
+    rev-parse             Pick out and massage parameters
+    show-ref              List references in a local repository
+```
 
 ...
 
