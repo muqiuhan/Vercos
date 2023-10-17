@@ -17,6 +17,8 @@
 This is not a new Version Control System. It simplifies many features and codes based on the current git,
 which can be used for teaching and research, or secondary development based on this project.
 
+The goal is simple, fast, cross-platform and beautiful command line output.
+
 ## Build and Publish
 
 This project enables .NET Native AOT construction by default:
