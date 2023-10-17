@@ -3,6 +3,7 @@ module Lit.Repository
 open System
 open IniParser
 open Errors
+open Log
 
 type Repository =
   { worktree : string
@@ -51,7 +52,7 @@ let GetConfig (gitdir : string) =
       if IO.Path.Exists(path) then
         conf.ReadFile(path)
       else
-        Log.Fatal(Repository(ConfigFileMissing(path)).ToString())
+        Log.Error(Repository(ConfigFileMissing(path)).ToString())
         failwith "")
     (Path.repo_file (gitdir, [| "config" |], false))
 
