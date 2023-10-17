@@ -1,4 +1,4 @@
-module vercos.test
+module lit.test
 
 open NUnit.Framework
 

@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\vercos\vercos.fsproj"/>
+        <ProjectReference Include="..\lit\lit.fsproj"/>
     </ItemGroup>
 
 </Project>

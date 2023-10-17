@@ -1,7 +1,7 @@
-﻿module vercos.Main
+﻿module lit.Main
 
 open Argu
-open vercos.Argu
+open lit.Cli
 
 [<EntryPoint>]
 let main argv =

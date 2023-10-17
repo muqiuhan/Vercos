@@ -1,4 +1,4 @@
-module vercos.Argu
+module lit.Cli
 
 open Argu
 
@@ -35,9 +35,9 @@ type CLIArguments =
   interface IArgParserTemplate with
     member s.Usage =
       match s with
-      | Version -> "Display version information about vercos"
+      | Version -> "Display version information about lit"
       | Add -> "Add file contents to the index"
-      | Init -> "Create an empty vercos repository or reinitialize an existing one"
+      | Init -> "Create an empty lit repository or reinitialize an existing one"
       | Log -> "Show commit logs"
       | Rm -> "Remove files from the working tree and from the index"
       | Tagging -> "Create, list, delete or verify a tag object signed with GPG"
@@ -50,7 +50,7 @@ type CLIArguments =
       | Ls_Files -> "Show information about files in the index and the working tree"
       | Ls_Tree -> "List the contents of a tree object"
       | Rev_Parse -> "Pick out and massage parameters"
-      | Help -> "Display help information about vercos"
+      | Help -> "Display help information about lit"
       | Show_Ref -> "List references in a local repository"
 
 type Parser =
@@ -65,7 +65,7 @@ type Parser =
 
   static member private parser =
     ArgumentParser.Create<CLIArguments>(
-      programName = "vercos",
+      programName = "lit",
       errorHandler = Parser.ErrorHandler
     )
 

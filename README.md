@@ -2,7 +2,7 @@
 
 <img src=".github/logo.png" height="150px" width="150px">
 
-# Vercos
+# Lit
 
 *A __minimalism__ __cross-platform__ __git-like__ version control system written in F#*
 
@@ -27,7 +27,7 @@ Just: `dotnet publish -c Release -r [Your Platform]`
 
 ## Usage
 
-- ```Vercos --help```
+- ```Lit --help```
 
 ...
 

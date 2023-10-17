@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "vercos", "vercos\vercos.fsproj", "{0F117412-9DD2-4718-B22B-CE90D14164C8}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "lit", "lit\lit.fsproj", "{0F117412-9DD2-4718-B22B-CE90D14164C8}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "vercos.test", "vercos.test\vercos.test.fsproj", "{0901906C-8C6C-44C8-BB19-C7F1626FBE9E}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "lit.test", "lit.test\lit.test.fsproj", "{0901906C-8C6C-44C8-BB19-C7F1626FBE9E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
