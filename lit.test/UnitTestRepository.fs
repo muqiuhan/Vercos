@@ -2,7 +2,6 @@ module Lit.test
 
 open NUnit.Framework
 open Repository
-open Log
 open System
 
 [<TestFixture>]
@@ -23,7 +22,7 @@ module Path =
       Result.map
         (fun path -> Assert.AreEqual(".lit/refs/remotes/origin", path))
         (repo_dir (".lit", [| "refs"; "remotes"; "origin" |], false))
-      |> Result.mapError (fun err -> Log.Warn(err.ToString()))
+      |> Result.mapError (fun err -> failwith $"{err}")
       |> Result.isOk
     )
 
@@ -41,7 +40,7 @@ module Path =
       Result.map
         (fun path -> Assert.AreEqual(".lit/refs/remotes/origin", path))
         (repo_dir (".lit", [| "refs"; "remotes"; "origin" |], true))
-      |> Result.mapError (fun err -> Log.Warn(err.ToString()))
+      |> Result.mapError (fun err -> failwith $"{err}")
       |> Result.isOk
     )
 

@@ -3,7 +3,6 @@ module Lit.Repository
 open System
 open IniParser
 open Errors
-open Log
 
 type Repository =
   { worktree : string
@@ -28,7 +27,6 @@ module Path =
       else
         Error(Repository(NotDirectory(path)))
     else if mkdir then
-      Log.Debug $"Create directory {path}"
       IO.Directory.CreateDirectory(path) |> ignore
       Ok(path)
     else
@@ -52,8 +50,7 @@ let GetConfig (gitdir : string) =
       if IO.Path.Exists(path) then
         conf.ReadFile(path)
       else
-        Log.Error(Repository(ConfigFileMissing(path)).ToString())
-        failwith "")
+        failwith $"{Repository(ConfigFileMissing(path))}")
     (Path.repo_file (gitdir, [| "config" |], false))
 
 /// Check repositoryformatversion
