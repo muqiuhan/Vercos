@@ -1,10 +1,10 @@
 module Lit.Cli
 
-module ArguImpl =
+module Argu_impl =
   open Argu
 
   [<RequireQualifiedAccess>]
-  type CliArgs =
+  type cli_args =
     | [<MainCommand; Last>] Args of string list
 
     interface IArgParserTemplate with
@@ -13,7 +13,7 @@ module ArguImpl =
         | Args(_) -> "__VERCOS_ARGS__"
 
   [<RequireQualifiedAccess>]
-  type CLIArguments =
+  type cli_arguments =
     | [<CliPrefix(CliPrefix.None)>] Version
     | [<CliPrefix(CliPrefix.None)>] Help
     | [<CliPrefix(CliPrefix.None)>] Add
@@ -56,10 +56,10 @@ module ArguImpl =
         | Show_Ref -> "List references in a local repository"
 
 module Parser =
-  open ArguImpl
+  open Argu_impl
   open Argu
 
-  let ErrorHandler =
+  let error_handler =
     { new IExiter with
         member this.Exit (msg : string, errorCode : ErrorCode) =
           match errorCode with
@@ -69,8 +69,11 @@ module Parser =
         member this.Name : string = "_" }
 
   let parser =
-    ArgumentParser.Create<CLIArguments>(programName = "lit", errorHandler = ErrorHandler)
+    ArgumentParser.Create<cli_arguments>(
+      programName = "lit",
+      errorHandler = error_handler
+    )
 
-  let Parse (argv) = parser.Parse(argv)
+  let parse (argv) = parser.Parse(argv)
 
-  let Usage () = parser.PrintUsage()
+  let usage () = parser.PrintUsage()

@@ -2,9 +2,9 @@
 
 [<EntryPoint>]
 let main argv =
-  let result = Cli.Parser.Parse(argv)
+  let result = Cli.Parser.parse (argv)
 
   match result.GetAllResults() with
-  | _ -> printfn $"{Cli.Parser.Usage()}"
+  | _ -> printfn $"{Cli.Parser.usage ()}"
 
   0
