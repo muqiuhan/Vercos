@@ -3,14 +3,6 @@ module Lit.Cli
 module Argu_impl =
   open Argu
 
-  [<RequireQualifiedAccess>]
-  type cli_args =
-    | [<MainCommand; Last>] Args of string list
-
-    interface IArgParserTemplate with
-      member this.Usage =
-        match this with
-        | Args(_) -> "__VERCOS_ARGS__"
 
   [<RequireQualifiedAccess>]
   type cli_arguments =
@@ -25,7 +17,7 @@ module Argu_impl =
     | [<CliPrefix(CliPrefix.None)>] Cat_File
     | [<CliPrefix(CliPrefix.None)>] Check_Ignore
     | [<CliPrefix(CliPrefix.None)>] Checkout
-    | [<CliPrefix(CliPrefix.None)>] Commit //  ParseResults<CleanArgs>
+    | [<CliPrefix(CliPrefix.None)>] Commit
     | [<CliPrefix(CliPrefix.None)>] Hash_Object
     | [<CliPrefix(CliPrefix.None)>] Ls_Files
     | [<CliPrefix(CliPrefix.None)>] Ls_Tree
@@ -38,7 +30,7 @@ module Argu_impl =
         match s with
         | Version -> "Display version information about lit"
         | Add -> "Add file contents to the index"
-        | Init -> "Create an empty lit repository or reinitialize an existing one"
+        | Init _ -> "Create an empty lit repository or reinitialize an existing one"
         | Log -> "Show commit logs"
         | Rm -> "Remove files from the working tree and from the index"
         | Tagging -> "Create, list, delete or verify a tag object signed with GPG"
@@ -63,8 +55,8 @@ module Parser =
     { new IExiter with
         member this.Exit (msg : string, errorCode : ErrorCode) =
           match errorCode with
-          | ErrorCode.HelpText -> exit 0
-          | _ -> exit 0
+          | ErrorCode.HelpText -> printfn $"{msg}" |> exit 0
+          | _ -> failwith $"{msg}"
 
         member this.Name : string = "_" }
 

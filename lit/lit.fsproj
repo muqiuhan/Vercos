@@ -5,7 +5,6 @@
     <PublishAOT>true</PublishAOT>
     <PublishTrimmed>true</PublishTrimmed>
     <ServerGarbageCollection>true</ServerGarbageCollection>
-    
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Errors.fs" />
@@ -14,7 +13,7 @@
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
-     <None Update="nlog.config" CopyToOutputDirectory="Always" />
+    <None Update="nlog.config" CopyToOutputDirectory="Always" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Argu" Version="6.1.1" />

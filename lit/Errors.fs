@@ -2,7 +2,6 @@ module Lit.Errors
 
 type Errors =
   | Repository of Repository
-  | Unknown
 
   override this.ToString () =
     match this with
@@ -14,7 +13,7 @@ type Errors =
       | Unsupported_repository_format_version version ->
         "Unsupported repositoryformatversion ${version}"
       | Directory_is_not_empty path -> $"{path} is not empty"
-    | Unknown -> "Unknown"
+      | CannotGetDirectory path -> $"Cannot get the repository directory {path}"
 
 and Repository =
   | Not_lit_repository of string
@@ -22,3 +21,11 @@ and Repository =
   | Config_file_missing of string
   | Unsupported_repository_format_version of string
   | Directory_is_not_empty of string
+  | CannotGetDirectory of string
+
+type result<'T> = Result<'T, Errors>
+
+let unwrap (res : result<'T>) =
+  match res with
+  | Ok(value) -> value
+  | Error(err) -> failwith $"{err}"
