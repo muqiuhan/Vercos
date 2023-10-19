@@ -26,25 +26,28 @@ and RepositoryPathSolver (repo : Repository) =
   /// For example, repo_file(r, "refs", "remotes", "origin", "HEAD")
   ///   will create .lit/refs/remotes/origin.
   member public this.repo_file (path : array<string>, mkdir : bool) =
-    this.repo_dir (Array.sub path 1 (Array.length path - 1), mkdir) |> unwrap
+    this.repo_dir (Array.sub path 0 (Array.length path - 1), mkdir)
 
   /// Same as repo_path, but mkdir path if absent if mkdir.
   member public this.repo_dir (path : array<string>, mkdir : bool) =
     let path = this.repo_path (path)
 
-    if IO.Path.Exists(path) then
-      if IO.Directory.Exists(path) then
+    let path =
+      if IO.Path.Exists(path) then
+        if IO.Directory.Exists(path) then
+          Ok(path)
+        else
+          Error(Errors.Repository(Not_directory(path)))
+      else if mkdir then
+        IO.Directory.CreateDirectory(path) |> ignore
         Ok(path)
       else
-        Error(Errors.Repository(Not_directory(path)))
-    else if mkdir then
-      IO.Directory.CreateDirectory(path) |> ignore
-      Ok(path)
-    else
-      Error(Errors.Repository(CannotGetDirectory(path)))
+        Error(Errors.Repository(CannotGetDirectory(path)))
+
+    unwrap path
 
 and Config (repo : Repository) =
   let parser = new FileIniDataParser()
   let conf = new Model.IniData()
 
-  // do parser.ReadFile(repo.litdir)
+// do parser.ReadFile(repo.litdir)

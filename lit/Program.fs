@@ -1,7 +1,7 @@
 ﻿module Lit.Main
 
 let init () =
-  Repository.init (".") |> fun repo -> printfn $"{repo}"
+  ()
 
 [<EntryPoint>]
 let main argv =

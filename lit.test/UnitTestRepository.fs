@@ -5,44 +5,43 @@ open Repository
 open System
 
 [<TestFixture>]
-module Path =
-  open Path
+type TestRepositoryPathSolver () =
 
   [<Test>]
-  let ``repo_path(".lit", [|"objs" ; "08"|])`` () =
-    Assert.AreEqual(".lit/objs/08", repo_path (".lit", [| "objs"; "08" |]))
+  static member public ``repo_path(".lit", [|"objs" ; "08"|])`` () =
+    let repo = Repository(".", false)
+
+    Assert.AreEqual(
+      "./.lit/objs/08",
+      RepositoryPathSolver(repo).repo_path ([| "objs"; "08" |])
+    )
 
   [<Test>]
-  let ``If path exists then repo_dir(".lit", [| "refs"; "remotes"; "origin" |])`` () =
+  static member public ``If path exists then repo_dir(".lit", [| "refs"; "remotes"; "origin" |])``
+    ()
+    =
     let path = IO.Path.Join([| ".lit"; "refs"; "remotes"; "origin" |])
+    let repo = Repository(".", false)
     IO.Directory.CreateDirectory(path) |> ignore
 
     Assert.AreEqual(
-      true,
-      Result.map
-        (fun path -> Assert.AreEqual(".lit/refs/remotes/origin", path))
-        (repo_dir (".lit", [| "refs"; "remotes"; "origin" |], false))
-      |> Result.mapError (fun err -> failwith $"{err}")
-      |> Result.isOk
+      "./.lit/refs/remotes/origin",
+      RepositoryPathSolver(repo).repo_dir ([| "refs"; "remotes"; "origin" |], false)
     )
-
 
     IO.Directory.Delete(path) |> ignore
 
   [<Test>]
-  let ``If path not exists then repo_dir(".lit", [| "refs"; "remotes"; "origin" |], true)``
+  static member public ``If path not exists then repo_dir(".lit", [| "refs"; "remotes"; "origin"; "HEAD" |], true)``
     ()
     =
-    let path = IO.Path.Join([| ".lit"; "refs"; "remotes"; "origin" |])
+    let repo = Repository(".", false)
 
-    Assert.AreEqual(
-      true,
-      Result.map
-        (fun path -> Assert.AreEqual(".lit/refs/remotes/origin", path))
-        (repo_dir (".lit", [| "refs"; "remotes"; "origin" |], true))
-      |> Result.mapError (fun err -> failwith $"{err}")
-      |> Result.isOk
-    )
+    let path =
+      RepositoryPathSolver(repo)
+        .repo_file ([| "refs"; "remotes"; "origin"; "HEAD" |], true)
 
+    Assert.AreEqual("./.lit/refs/remotes/origin", path)
     Assert.AreEqual(true, IO.Directory.Exists(path))
+
     IO.Directory.Delete(path) |> ignore
