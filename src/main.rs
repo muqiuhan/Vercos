@@ -1,3 +1,7 @@
+mod cli;
+mod r#const;
+
 fn main() {
-    println!("Hello, world!");
+    let opt = cli::CommandLineParser::parse();
+    println!("{:?}", opt);
 }
