@@ -1,4 +1,4 @@
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 name: Build and Test
 
@@ -41,6 +41,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: test
+          args: -- --test-threads=1
 
   lints:
     name: Lints
