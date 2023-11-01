@@ -9,7 +9,7 @@ impl crate::repo::Repo {
             .fold(lit_dir.to_owned(), |repo_path, path| repo_path.join(path)))
     }
 
-    /// Same as repo_path, but create dirname(*path) if absent.
+    /// Same as repo_path, but create directory if absent.
     /// For example, `repo_file(".lit", ["refs", "remotes", "origin", "HEAD"])`
     /// will create .lit/refs/remotes/origin
     pub fn repo_file(lit_dir: &PathBuf, path: &[&str], mkdir: bool) -> error::Result<PathBuf> {
@@ -74,6 +74,33 @@ mod test {
         let expect = PathBuf::from(".lit").join("refs").join("remotes").join("origin");
         let path = ["refs", "remotes", "origin", "HEAD"];
         let path = Repo::repo_file(&lit_dir, &path, true).unwrap();
+
+        assert_eq!(expect, path);
+
+        fs::remove_dir_all(".lit").unwrap();
+    }
+
+    #[test]
+    pub fn test_repo_dir() {
+        let lit_dir = PathBuf::from(".lit");
+        let expect = PathBuf::from(".lit").join("refs").join("remotes").join("origin").join("HEAD");
+
+        fs::create_dir_all(&expect).unwrap();
+
+        let path = ["refs", "remotes", "origin", "HEAD"];
+        let path = Repo::repo_dir(&lit_dir, &path, false).unwrap();
+
+        assert_eq!(expect, path);
+
+        fs::remove_dir_all(".lit").unwrap();
+    }
+
+    #[test]
+    pub fn test_repo_file_with_dir() {
+        let lit_dir = PathBuf::from(".lit");
+        let expect = PathBuf::from(".lit").join("refs").join("remotes").join("origin").join("HEAD");
+        let path = ["refs", "remotes", "origin", "HEAD"];
+        let path = Repo::repo_dir(&lit_dir, &path, true).unwrap();
 
         assert_eq!(expect, path);
 
