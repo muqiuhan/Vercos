@@ -14,12 +14,6 @@ pub enum CommandLineParser {
         #[structopt(default_value = ".")]
         path: String,
     },
-    // Commit {
-    //     #[structopt(short)]
-    //     message: Option<String>,
-    //     #[structopt(short)]
-    //     all: bool,
-    // },
 }
 
 impl CommandLineParser {

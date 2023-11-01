@@ -5,3 +5,4 @@ edition = "2021"
 
 [dependencies]
 structopt = "0.3.26"
+rust-ini = "0.18.0"
