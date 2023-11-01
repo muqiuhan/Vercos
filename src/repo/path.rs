@@ -2,7 +2,7 @@ use crate::error::{self, Error, Repo};
 use std::{fs, path::PathBuf};
 
 impl crate::repo::Repo {
-    /// Compute path under repo's litdir
+    /// Compute path under repo's lit_dir
     pub fn repo_path(lit_dir: &PathBuf, path: &[&str]) -> error::Result<PathBuf> {
         Ok(path
             .iter()
@@ -10,7 +10,8 @@ impl crate::repo::Repo {
     }
 
     /// Same as repo_path, but create dirname(*path) if absent.
-    /// For example, repo_file(r, \"refs\", \"remotes\", \"origin\", \"HEAD\") will create .lit/refs/remotes/origin
+    /// For example, `repo_file(".lit", ["refs", "remotes", "origin", "HEAD"])`
+    /// will create .lit/refs/remotes/origin
     pub fn repo_file(lit_dir: &PathBuf, path: &[&str], mkdir: bool) -> error::Result<PathBuf> {
         Self::repo_dir(lit_dir, &path[0..path.len() - 1], mkdir)
     }
@@ -36,16 +37,46 @@ impl crate::repo::Repo {
 
 #[cfg(test)]
 mod test {
+    use std::fs;
     use crate::repo::Repo;
     use std::path::PathBuf;
 
     #[test]
     pub fn test_repo_path() {
         let lit_dir = PathBuf::from(".lit");
+        let expect = PathBuf::from(".lit").join("a").join("b").join("c");
+
         let path = ["a", "b", "c"];
-        assert_eq!(
-            PathBuf::from(".lit").join("a").join("b").join("c"),
-            Repo::repo_path(&lit_dir, &path).unwrap()
-        )
+        let path = Repo::repo_path(&lit_dir, &path).unwrap();
+
+
+        assert_eq!(expect, path)
+    }
+
+    #[test]
+    pub fn test_repo_file() {
+        let lit_dir = PathBuf::from(".lit");
+        let expect = PathBuf::from(".lit").join("refs").join("remotes").join("origin");
+
+        fs::create_dir_all(&expect).unwrap();
+
+        let path = ["refs", "remotes", "origin", "HEAD"];
+        let path = Repo::repo_file(&lit_dir, &path, false).unwrap();
+
+        assert_eq!(expect, path);
+
+        fs::remove_dir_all(".lit").unwrap();
+    }
+
+    #[test]
+    pub fn test_repo_file_with_mkdir() {
+        let lit_dir = PathBuf::from(".lit");
+        let expect = PathBuf::from(".lit").join("refs").join("remotes").join("origin");
+        let path = ["refs", "remotes", "origin", "HEAD"];
+        let path = Repo::repo_file(&lit_dir, &path, true).unwrap();
+
+        assert_eq!(expect, path);
+
+        fs::remove_dir_all(".lit").unwrap();
     }
 }
