@@ -1,3 +1,5 @@
+.PHONY: build install uninstall build.release fmt check fix
+
 build :
 	@cargo build
 
@@ -18,3 +20,6 @@ check:
 
 fix:
 	@cargo clippy --fix --allow-staged
+
+test:
+	@cargo test -- --test-threads=1
