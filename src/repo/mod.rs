@@ -7,14 +7,14 @@ use std::path::{Path, PathBuf};
 
 /// The lit repository
 pub struct Repo {
-    worktree: String,
-    lit_dir: String,
-    conf: Ini,
+    pub worktree: PathBuf,
+    pub lit_dir: PathBuf,
+    pub conf: Ini,
 }
 
 impl Repo {
     pub fn new(path: &String, force: bool) -> Self {
-        let worktree = path.clone();
+        let worktree = PathBuf::from(path);
         let lit_dir = Path::new(path).join(LIT_DIR);
 
         if !(force || Path::new(&lit_dir).is_dir()) {
@@ -26,7 +26,7 @@ impl Repo {
 
         Repo {
             worktree,
-            lit_dir: String::from(lit_dir.to_str().unwrap()),
+            lit_dir,
             conf,
         }
     }
@@ -48,7 +48,7 @@ impl Repo {
     }
 
     pub(self) fn read_conf_file(lit_dir: &PathBuf, force: bool) -> error::Result<Ini> {
-        let conf = Self::repo_file(lit_dir, &vec!["conf"], false)?;
+        let conf = Self::repo_file(lit_dir, &["conf"], false)?;
 
         if conf.exists() {
             Ok(Ini::load_from_file(conf).unwrap())

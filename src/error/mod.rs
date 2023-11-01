@@ -11,15 +11,17 @@ pub enum Error {
 pub enum Repo {
     NotLitRepo(PathBuf),
     NotDirectory(PathBuf),
+    NotEmpty(PathBuf),
     MissingConfigFile(PathBuf),
     UnsupportedRepositoryFormatVersion(String),
 }
 
 impl Repo {
-    pub fn panic(self) {
+    pub fn panic(self) -> ! {
         match self {
-            Repo::NotLitRepo(dir) => panic!("Not a lit repository {}", dir.to_str().unwrap()),
-            Repo::NotDirectory(dir) => panic!("Not a directory {}", dir.to_str().unwrap()),
+            Repo::NotLitRepo(dir) => panic!("{} is not a lit repository", dir.to_str().unwrap()),
+            Repo::NotDirectory(dir) => panic!("{} is not a directory", dir.to_str().unwrap()),
+            Repo::NotEmpty(dir) => panic!("The directory {} is not empty", dir.to_str().unwrap()),
             Repo::UnsupportedRepositoryFormatVersion(version) => {
                 panic!("Unsupported repositoryformatversion {}", version)
             }
@@ -32,7 +34,7 @@ impl Repo {
 }
 
 impl Error {
-    pub fn panic(self) {
+    pub fn panic(self) -> ! {
         match self {
             Error::Repo(err) => err.panic(),
         }

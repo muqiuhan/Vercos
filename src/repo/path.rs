@@ -3,7 +3,7 @@ use std::{fs, path::PathBuf};
 
 impl crate::repo::Repo {
     /// Compute path under repo's litdir
-    pub(super) fn repo_path(lit_dir: &PathBuf, path: &[&str]) -> error::Result<PathBuf> {
+    pub fn repo_path(lit_dir: &PathBuf, path: &[&str]) -> error::Result<PathBuf> {
         Ok(path
             .iter()
             .fold(lit_dir.to_owned(), |repo_path, path| repo_path.join(path)))
@@ -11,20 +11,12 @@ impl crate::repo::Repo {
 
     /// Same as repo_path, but create dirname(*path) if absent.
     /// For example, repo_file(r, \"refs\", \"remotes\", \"origin\", \"HEAD\") will create .lit/refs/remotes/origin
-    pub(super) fn repo_file(
-        lit_dir: &PathBuf,
-        path: &Vec<&str>,
-        mkdir: bool,
-    ) -> error::Result<PathBuf> {
+    pub fn repo_file(lit_dir: &PathBuf, path: &[&str], mkdir: bool) -> error::Result<PathBuf> {
         Self::repo_dir(lit_dir, &path[0..path.len() - 1], mkdir)
     }
 
     /// Same as repo_path, but mkdir *path if absent if mkdir.
-    pub(super) fn repo_dir(
-        lit_dir: &PathBuf,
-        path: &[&str],
-        mkdir: bool,
-    ) -> error::Result<PathBuf> {
+    pub fn repo_dir(lit_dir: &PathBuf, path: &[&str], mkdir: bool) -> error::Result<PathBuf> {
         let path = Self::repo_path(lit_dir, path)?;
 
         if path.exists() {
