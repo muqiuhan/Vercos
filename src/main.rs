@@ -9,6 +9,7 @@ extern crate log;
 extern crate colog;
 
 fn main() {
+    colog::init();
     let args = cli::CommandLineParser::parse();
     commands::command(&args)
 }

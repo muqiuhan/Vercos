@@ -7,6 +7,15 @@ pub enum Error {
     Repo(Repo),
 }
 
+pub trait Log {
+    fn fmt(&self) -> String;
+
+    fn panic(&self) -> ! {
+        error!("{}", self.fmt());
+        panic!("{}", self.fmt());
+    }
+}
+
 #[derive(Debug)]
 #[allow(clippy::enum_variant_names)]
 pub enum Repo {
@@ -17,27 +26,19 @@ pub enum Repo {
     UnsupportedRepositoryFormatVersion(String),
 }
 
-impl Repo {
-    pub fn panic(self) -> ! {
+impl Log for Repo {
+    fn fmt(&self) -> String {
         match self {
-            Repo::NotLitRepo(dir) => panic!("{} is not a lit repository", dir.to_str().unwrap()),
-            Repo::NotDirectory(dir) => panic!("{} is not a directory", dir.to_str().unwrap()),
-            Repo::NotEmpty(dir) => panic!("The directory {} is not empty", dir.to_str().unwrap()),
+            Repo::NotLitRepo(dir) => format!("{} is not a lit repository", dir.to_str().unwrap()),
+            Repo::NotDirectory(dir) => format!("{} is not a directory", dir.to_str().unwrap()),
+            Repo::NotEmpty(dir) => format!("The directory {} is not empty", dir.to_str().unwrap()),
             Repo::UnsupportedRepositoryFormatVersion(version) => {
-                panic!("Unsupported repositoryformatversion {}", version)
+                format!("Unsupported repositoryformatversion {}", version)
             }
-            Repo::MissingConfigFile(config_file_path) => panic!(
+            Repo::MissingConfigFile(config_file_path) => format!(
                 "Missing configuration file {}",
                 config_file_path.to_str().unwrap()
             ),
-        }
-    }
-}
-
-impl Error {
-    pub fn panic(self) -> ! {
-        match self {
-            Error::Repo(err) => err.panic(),
         }
     }
 }
