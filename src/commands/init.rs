@@ -1,5 +1,5 @@
 use crate::error;
-use crate::error::Error;
+use crate::error::{Log};
 use crate::repo::Repo;
 use std::fs;
 
@@ -12,14 +12,14 @@ pub struct Init {
 }
 
 impl Init {
-    pub fn create(path: String) -> Repo {
-        let repo = Repo::new(&path, true);
+    pub fn create(path: String, force: bool) -> Repo {
+        let repo = Repo::new(&path, !force);
 
         info!(
             "create repository worktree on {}",
             &repo.worktree.to_str().unwrap()
         );
-        Self::create_worktree(&repo);
+        Self::create_worktree(&repo, force);
 
         info!("create repository directories...");
         Self::create_dirs(&repo);
@@ -34,17 +34,17 @@ impl Init {
     }
 
     // Make sure the path either doesn't exist or is an empty dir.
-    fn create_worktree(repo: &Repo) {
+    fn create_worktree(repo: &Repo, force: bool) {
         let worktree = &repo.worktree;
         let lit_dir = &repo.lit_dir;
 
         if repo.worktree.exists() {
             if !(worktree.is_dir()) {
-                Error::Repo(error::Repo::NotDirectory(worktree.clone())).panic();
+                error::Repo::NotDirectory(worktree.clone()).panic()
             }
 
-            if (lit_dir.exists()) && (lit_dir.read_dir().unwrap().next().is_some()) {
-                Error::Repo(error::Repo::NotEmpty(worktree.clone())).panic()
+            if (lit_dir.exists()) && (lit_dir.read_dir().unwrap().next().is_some()) && (!force) {
+                error::Repo::NotEmpty(worktree.clone()).panic()
             }
         } else {
             fs::create_dir_all(worktree).unwrap();

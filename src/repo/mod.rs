@@ -1,6 +1,6 @@
 mod path;
 
-use crate::error::{self, Error};
+use crate::error::{self, Error, Log};
 use crate::r#const::LIT_DIR;
 use ini::Ini;
 use std::path::{Path, PathBuf};
@@ -18,7 +18,7 @@ impl Repo {
         let lit_dir = Path::new(path).join(LIT_DIR);
 
         if !(force || Path::new(&lit_dir).is_dir()) {
-            Error::Repo(error::Repo::NotLitRepo(lit_dir.clone())).panic();
+            error::Repo::NotLitRepo(lit_dir.clone()).panic();
         }
 
         match Self::read_conf_file(&lit_dir, force) {
@@ -55,14 +55,16 @@ impl Repo {
     }
 
     pub(self) fn read_conf_file(lit_dir: &PathBuf, force: bool) -> Option<Ini> {
-        let conf = Self::repo_file(lit_dir, &["conf"], false);
+        let conf = Self::repo_file(lit_dir, &["config"], false);
 
         match conf {
             Some(path) => {
                 if path.exists() {
                     Some(Ini::load_from_file(path).unwrap())
                 } else if !force {
-                    Error::Repo(error::Repo::MissingConfigFile(path)).panic()
+                    error::Repo::MissingConfigFile(path).panic();
+                } else if force {
+                    Some(Ini::load_from_file(path).unwrap())
                 } else {
                     panic!("read_conf_file({:?}, {:?})", lit_dir, force)
                 }

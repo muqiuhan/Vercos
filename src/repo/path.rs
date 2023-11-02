@@ -1,4 +1,5 @@
-use crate::error::{Error, Repo};
+use crate::error;
+use crate::error::{Log};
 use std::{fs, path::PathBuf};
 
 impl crate::repo::Repo {
@@ -28,7 +29,7 @@ impl crate::repo::Repo {
             if path.is_dir() {
                 Some(path)
             } else {
-                Error::Repo(Repo::NotDirectory(path)).panic();
+                error::Repo::NotDirectory(path).panic()
             }
         } else if mkdir {
             fs::create_dir_all(&path).unwrap();
