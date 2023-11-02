@@ -1,3 +1,5 @@
+/// Copyright (C) 2023 Muqiu Han
+
 mod cli;
 mod commands;
 mod r#const;

@@ -1,5 +1,7 @@
+/// Copyright (C) 2023 Muqiu Han
+
 use crate::error;
-use crate::error::{Log};
+use crate::error::Log;
 use crate::repo::Repo;
 use std::fs;
 
