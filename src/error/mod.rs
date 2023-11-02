@@ -1,5 +1,4 @@
 /// Copyright (C) 2023 Muqiu Han
-
 use std::path::PathBuf;
 
 pub type Result<T> = std::result::Result<T, Error>;

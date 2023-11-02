@@ -1,5 +1,4 @@
 /// Copyright (C) 2023 Muqiu Han
-
 use crate::cli::CommandLineParser;
 
 pub mod init;

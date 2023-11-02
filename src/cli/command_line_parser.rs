@@ -1,5 +1,4 @@
 /// Copyright (C) 2023 Muqiu Han
-
 use crate::r#const::project_info;
 use structopt::StructOpt;
 

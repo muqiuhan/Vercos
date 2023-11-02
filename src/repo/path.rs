@@ -1,5 +1,4 @@
 /// Copyright (C) 2023 Muqiu Han
-
 use crate::error;
 use crate::error::Log;
 use std::{fs, path::PathBuf};

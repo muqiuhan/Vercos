@@ -1,5 +1,4 @@
 /// Copyright (C) 2023 Muqiu Han
-
 mod path;
 
 use crate::error::{self, Error, Log};
