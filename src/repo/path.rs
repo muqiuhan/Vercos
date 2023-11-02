@@ -3,42 +3,46 @@ use std::{fs, path::PathBuf};
 
 impl crate::repo::Repo {
     /// Compute path under repo's lit_dir
-    pub fn repo_path(lit_dir: &PathBuf, path: &[&str]) -> error::Result<PathBuf> {
-        Ok(path
-            .iter()
-            .fold(lit_dir.to_owned(), |repo_path, path| repo_path.join(path)))
+    pub fn repo_path(lit_dir: &PathBuf, path: &[&str]) -> Option<PathBuf> {
+        Some(
+            path.iter()
+                .fold(lit_dir.to_owned(), |repo_path, path| repo_path.join(path)),
+        )
     }
 
     /// Same as repo_path, but create directory if absent.
     /// For example, `repo_file(".lit", ["refs", "remotes", "origin", "HEAD"])`
     /// will create .lit/refs/remotes/origin
-    pub fn repo_file(lit_dir: &PathBuf, path: &[&str], mkdir: bool) -> error::Result<PathBuf> {
-        Self::repo_dir(lit_dir, &path[0..path.len() - 1], mkdir)
+    pub fn repo_file(lit_dir: &PathBuf, path: &[&str], mkdir: bool) -> Option<PathBuf> {
+        match Self::repo_dir(lit_dir, &path[0..path.len() - 1], mkdir) {
+            Some(_) => Self::repo_path(lit_dir, path),
+            None => None,
+        }
     }
 
     /// Same as repo_path, but mkdir *path if absent if mkdir.
-    pub fn repo_dir(lit_dir: &PathBuf, path: &[&str], mkdir: bool) -> error::Result<PathBuf> {
+    pub fn repo_dir(lit_dir: &PathBuf, path: &[&str], mkdir: bool) -> Option<PathBuf> {
         let path = Self::repo_path(lit_dir, path)?;
 
         if path.exists() {
             if path.is_dir() {
-                Ok(path)
+                Some(path)
             } else {
-                Err(Error::Repo(Repo::NotDirectory(path)))
+                Error::Repo(Repo::NotDirectory(path)).panic();
             }
         } else if mkdir {
             fs::create_dir_all(&path).unwrap();
-            return Ok(path);
+            return Some(path);
         } else {
-            panic!("repo_dir({:?}, {:?})", lit_dir, path)
+            None
         }
     }
 }
 
 #[cfg(test)]
 mod test {
-    use std::fs;
     use crate::repo::Repo;
+    use std::fs;
     use std::path::PathBuf;
 
     #[test]
@@ -49,14 +53,17 @@ mod test {
         let path = ["a", "b", "c"];
         let path = Repo::repo_path(&lit_dir, &path).unwrap();
 
-
         assert_eq!(expect, path)
     }
 
     #[test]
     pub fn test_repo_file() {
         let lit_dir = PathBuf::from(".lit");
-        let expect = PathBuf::from(".lit").join("refs").join("remotes").join("origin");
+        let expect = PathBuf::from(".lit")
+            .join("refs")
+            .join("remotes")
+            .join("origin")
+            .join("HEAD");
 
         fs::create_dir_all(&expect).unwrap();
 
@@ -71,7 +78,12 @@ mod test {
     #[test]
     pub fn test_repo_file_with_mkdir() {
         let lit_dir = PathBuf::from(".lit");
-        let expect = PathBuf::from(".lit").join("refs").join("remotes").join("origin");
+        let expect = PathBuf::from(".lit")
+            .join("refs")
+            .join("remotes")
+            .join("origin")
+            .join("HEAD");
+
         let path = ["refs", "remotes", "origin", "HEAD"];
         let path = Repo::repo_file(&lit_dir, &path, true).unwrap();
 
@@ -83,7 +95,11 @@ mod test {
     #[test]
     pub fn test_repo_dir() {
         let lit_dir = PathBuf::from(".lit");
-        let expect = PathBuf::from(".lit").join("refs").join("remotes").join("origin").join("HEAD");
+        let expect = PathBuf::from(".lit")
+            .join("refs")
+            .join("remotes")
+            .join("origin")
+            .join("HEAD");
 
         fs::create_dir_all(&expect).unwrap();
 
@@ -96,9 +112,13 @@ mod test {
     }
 
     #[test]
-    pub fn test_repo_file_with_dir() {
+    pub fn test_repo_dir_with_mkdir() {
         let lit_dir = PathBuf::from(".lit");
-        let expect = PathBuf::from(".lit").join("refs").join("remotes").join("origin").join("HEAD");
+        let expect = PathBuf::from(".lit")
+            .join("refs")
+            .join("remotes")
+            .join("origin")
+            .join("HEAD");
         let path = ["refs", "remotes", "origin", "HEAD"];
         let path = Repo::repo_dir(&lit_dir, &path, true).unwrap();
 

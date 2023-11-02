@@ -1,4 +1,4 @@
-.PHONY: build install uninstall build.release fmt check fix
+.PHONY: build install uninstall build.release fmt check fix test
 
 build :
 	@cargo build

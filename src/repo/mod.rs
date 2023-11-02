@@ -9,7 +9,7 @@ use std::path::{Path, PathBuf};
 pub struct Repo {
     pub worktree: PathBuf,
     pub lit_dir: PathBuf,
-    pub conf: Ini,
+    pub conf: Option<Ini>,
 }
 
 impl Repo {
@@ -21,13 +21,20 @@ impl Repo {
             Error::Repo(error::Repo::NotLitRepo(lit_dir.clone())).panic();
         }
 
-        let mut conf = Self::read_conf_file(&lit_dir, force).unwrap();
-        Self::check_repositoryformatversion(&mut conf).unwrap();
-
-        Repo {
-            worktree,
-            lit_dir,
-            conf,
+        match Self::read_conf_file(&lit_dir, force) {
+            Some(mut conf) => {
+                Self::check_repositoryformatversion(&mut conf).unwrap();
+                Repo {
+                    worktree,
+                    lit_dir,
+                    conf: Some(conf),
+                }
+            }
+            None => Repo {
+                worktree,
+                lit_dir,
+                conf: None,
+            },
         }
     }
 
@@ -47,15 +54,20 @@ impl Repo {
         }
     }
 
-    pub(self) fn read_conf_file(lit_dir: &PathBuf, force: bool) -> error::Result<Ini> {
-        let conf = Self::repo_file(lit_dir, &["conf"], false)?;
+    pub(self) fn read_conf_file(lit_dir: &PathBuf, force: bool) -> Option<Ini> {
+        let conf = Self::repo_file(lit_dir, &["conf"], false);
 
-        if conf.exists() {
-            Ok(Ini::load_from_file(conf).unwrap())
-        } else if !force {
-            Err(Error::Repo(error::Repo::MissingConfigFile(conf)))
-        } else {
-            unimplemented!()
+        match conf {
+            Some(path) => {
+                if path.exists() {
+                    Some(Ini::load_from_file(path).unwrap())
+                } else if !force {
+                    Error::Repo(error::Repo::MissingConfigFile(path)).panic()
+                } else {
+                    panic!("read_conf_file({:?}, {:?})", lit_dir, force)
+                }
+            }
+            _ => None,
         }
     }
 }
