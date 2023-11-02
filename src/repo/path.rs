@@ -1,4 +1,4 @@
-use crate::error::{self, Error, Repo};
+use crate::error::{Error, Repo};
 use std::{fs, path::PathBuf};
 
 impl crate::repo::Repo {

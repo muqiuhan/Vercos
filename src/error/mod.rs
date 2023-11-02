@@ -8,6 +8,7 @@ pub enum Error {
 }
 
 #[derive(Debug)]
+#[allow(clippy::enum_variant_names)]
 pub enum Repo {
     NotLitRepo(PathBuf),
     NotDirectory(PathBuf),

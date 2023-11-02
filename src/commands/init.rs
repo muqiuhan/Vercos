@@ -44,7 +44,7 @@ impl Init {
             }
 
             if (lit_dir.exists()) && (lit_dir.read_dir().unwrap().next().is_some()) {
-                Error::Repo(error::Repo::NotDirectory(worktree.clone())).panic()
+                Error::Repo(error::Repo::NotEmpty(worktree.clone())).panic()
             }
         } else {
             fs::create_dir_all(worktree).unwrap();
