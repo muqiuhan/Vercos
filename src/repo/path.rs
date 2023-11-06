@@ -1,6 +1,7 @@
 /// Copyright (C) 2023 Muqiu Han
 use crate::error;
 use crate::error::Log;
+use crate::r#const::LIT_DIR;
 use std::{fs, path::PathBuf};
 
 impl crate::repo::Repo {
@@ -37,6 +38,30 @@ impl crate::repo::Repo {
             return Some(path);
         } else {
             None
+        }
+    }
+
+    /// Look for that root, starting at the current directory and recursing back to /.
+    /// To identify a path as a repository, it will check for the presence of a `LIT_DIR` directory.
+    pub fn repo_find(path: &String, required: bool) -> Option<Self> {
+        let path = std::fs::canonicalize(PathBuf::from(path)).unwrap();
+
+        if path.join(LIT_DIR).is_dir() {
+            Some(Self::new_with_pathbuf(&path, false))
+        } else {
+            // Recurse in parent
+            let parent = std::fs::canonicalize(PathBuf::from(&path).join("..")).unwrap();
+
+            // At root directory (`/.. == /`)
+            if parent.eq(&path) {
+                if required {
+                    error::Repo::CannotFindLitRepo(path).panic();
+                } else {
+                    None
+                }
+            } else {
+                Self::repo_find(&parent.to_str().unwrap().to_string(), required)
+            }
         }
     }
 }

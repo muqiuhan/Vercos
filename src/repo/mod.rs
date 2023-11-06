@@ -39,6 +39,10 @@ impl Repo {
         }
     }
 
+    pub fn new_with_pathbuf(path: &PathBuf, force: bool) -> Self {
+        Self::new(&path.to_str().unwrap().to_string(), force)
+    }
+
     pub(self) fn check_repositoryformatversion(conf: &mut Ini) -> error::Result<()> {
         let repositoryformatversion = conf
             .with_section(Some("core"))

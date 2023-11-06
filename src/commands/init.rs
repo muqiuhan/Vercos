@@ -83,7 +83,7 @@ impl Init {
             .set("repositoryformatversion", "0")
             // Disable tracking of file mode (permissions) changes in the work tree.
             .set("filemode", "false")
-            // Dndicates that this repository has a worktree.
+            // Dedicates that this repository has a worktree.
             .set("bare", "false");
 
         conf.write_to_file(Repo::repo_file(&repo.lit_dir, &["config"], false).unwrap())
