@@ -3,6 +3,7 @@ mod cli;
 mod commands;
 mod r#const;
 mod error;
+mod object;
 mod repo;
 
 #[macro_use]

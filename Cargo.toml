@@ -8,3 +8,5 @@ structopt = "0.3.26"
 rust-ini = "0.20.0"
 colog = { git = "https://github.com/muqiuhan/rust-colog" }
 log = '0.4.17'
+flate2 = "1.0.28"
+sha1 = "0.10.6"

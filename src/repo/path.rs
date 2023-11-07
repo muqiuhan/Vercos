@@ -31,7 +31,7 @@ impl crate::repo::Repo {
             if path.is_dir() {
                 Some(path)
             } else {
-                error::Repo::NotDirectory(path).panic()
+                error::repo::Repo::NotDirectory(path).panic()
             }
         } else if mkdir {
             fs::create_dir_all(&path).unwrap();
@@ -55,7 +55,7 @@ impl crate::repo::Repo {
             // At root directory (`/.. == /`)
             if parent.eq(&path) {
                 if required {
-                    error::Repo::CannotFindLitRepo(path).panic();
+                    error::repo::Repo::CannotFindLitRepo(path).panic();
                 } else {
                     None
                 }
@@ -68,6 +68,7 @@ impl crate::repo::Repo {
 
 #[cfg(test)]
 mod test {
+    use crate::r#const::LIT_DIR;
     use crate::repo::Repo;
     use std::fs;
     use std::path::PathBuf;
@@ -121,8 +122,8 @@ mod test {
 
     #[test]
     pub fn test_repo_dir() {
-        let lit_dir = PathBuf::from(".lit");
-        let expect = PathBuf::from(".lit")
+        let lit_dir = PathBuf::from(LIT_DIR);
+        let expect = PathBuf::from(LIT_DIR)
             .join("refs")
             .join("remotes")
             .join("origin")

@@ -19,7 +19,7 @@ impl Repo {
         let lit_dir = Path::new(path).join(LIT_DIR);
 
         if !(force || Path::new(&lit_dir).is_dir()) {
-            error::Repo::NotLitRepo(lit_dir.clone()).panic();
+            error::repo::Repo::NotLitRepo(lit_dir.clone()).panic();
         }
 
         match Self::read_conf_file(&lit_dir, force) {
@@ -52,7 +52,7 @@ impl Repo {
 
         if repositoryformatversion != "0" {
             Err(Error::Repo(
-                error::Repo::UnsupportedRepositoryFormatVersion(repositoryformatversion),
+                error::repo::Repo::UnsupportedRepositoryFormatVersion(repositoryformatversion),
             ))
         } else {
             Ok(())
@@ -67,7 +67,7 @@ impl Repo {
                 if path.exists() {
                     Some(Ini::load_from_file(path).unwrap())
                 } else if !force {
-                    error::Repo::MissingConfigFile(path).panic();
+                    error::repo::Repo::MissingConfigFile(path).panic();
                 } else if force {
                     Some(Ini::load_from_file(path).unwrap())
                 } else {
