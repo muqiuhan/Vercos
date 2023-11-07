@@ -56,7 +56,7 @@ impl Repo {
         }
     }
 
-    pub fn new_with_pathbuf(path: &PathBuf, force: bool) -> Self {
+    pub fn new_with_pathbuf(path: &Path, force: bool) -> Self {
         Self::new(&path.to_str().unwrap().to_string(), force)
     }
 
