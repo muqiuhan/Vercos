@@ -31,7 +31,7 @@ impl crate::repo::Repo {
     }
 
     /// Same as repo_path, but create directory if absent.
-    /// For example, `repo_file(".lit", ["refs", "remotes", "origin", "HEAD"])`
+    /// For example, `repo_file(LIT_DIR, ["refs", "remotes", "origin", "HEAD"])`
     /// will create .lit/refs/remotes/origin
     pub fn repo_file(lit_dir: &PathBuf, path: &[&str], mkdir: bool) -> Option<PathBuf> {
         match Self::repo_dir(lit_dir, &path[0..path.len() - 1], mkdir) {
@@ -88,12 +88,13 @@ mod test {
     use crate::r#const::LIT_DIR;
     use crate::repo::Repo;
     use std::fs;
+    use std::panic::{catch_unwind, AssertUnwindSafe};
     use std::path::PathBuf;
 
     #[test]
     pub fn test_repo_path() {
-        let lit_dir = PathBuf::from(".lit");
-        let expect = PathBuf::from(".lit").join("a").join("b").join("c");
+        let lit_dir = PathBuf::from(LIT_DIR);
+        let expect = PathBuf::from(LIT_DIR).join("a").join("b").join("c");
 
         let path = ["a", "b", "c"];
         let path = Repo::repo_path(&lit_dir, &path).unwrap();
@@ -103,8 +104,8 @@ mod test {
 
     #[test]
     pub fn test_repo_file() {
-        let lit_dir = PathBuf::from(".lit");
-        let expect = PathBuf::from(".lit")
+        let lit_dir = PathBuf::from(LIT_DIR);
+        let expect = PathBuf::from(LIT_DIR)
             .join("refs")
             .join("remotes")
             .join("origin")
@@ -117,13 +118,13 @@ mod test {
 
         assert_eq!(expect, path);
 
-        fs::remove_dir_all(".lit").unwrap();
+        fs::remove_dir_all(LIT_DIR).unwrap();
     }
 
     #[test]
     pub fn test_repo_file_with_mkdir() {
-        let lit_dir = PathBuf::from(".lit");
-        let expect = PathBuf::from(".lit")
+        let lit_dir = PathBuf::from(LIT_DIR);
+        let expect = PathBuf::from(LIT_DIR)
             .join("refs")
             .join("remotes")
             .join("origin")
@@ -134,7 +135,7 @@ mod test {
 
         assert_eq!(expect, path);
 
-        fs::remove_dir_all(".lit").unwrap();
+        fs::remove_dir_all(LIT_DIR).unwrap();
     }
 
     #[test]
@@ -153,13 +154,13 @@ mod test {
 
         assert_eq!(expect, path);
 
-        fs::remove_dir_all(".lit").unwrap();
+        fs::remove_dir_all(LIT_DIR).unwrap();
     }
 
     #[test]
     pub fn test_repo_dir_with_mkdir() {
-        let lit_dir = PathBuf::from(".lit");
-        let expect = PathBuf::from(".lit")
+        let lit_dir = PathBuf::from(LIT_DIR);
+        let expect = PathBuf::from(LIT_DIR)
             .join("refs")
             .join("remotes")
             .join("origin")
@@ -169,6 +170,27 @@ mod test {
 
         assert_eq!(expect, path);
 
-        fs::remove_dir_all(".lit").unwrap();
+        fs::remove_dir_all(LIT_DIR).unwrap();
+    }
+
+    #[test]
+    pub fn test_repo_find_not_found() {
+        fs::create_dir_all("./test/a/b/c").unwrap();
+        assert!(Repo::repo_find(&String::from("./test/a/b/c"), false).is_none());
+        fs::remove_dir_all("./test").unwrap();
+    }
+
+    #[test]
+    pub fn test_repo_find() {
+        fs::create_dir_all("./test/a/b/c").unwrap();
+        fs::create_dir_all(LIT_DIR).unwrap();
+
+        assert!(catch_unwind(AssertUnwindSafe(|| {
+            Repo::repo_find(&String::from("./test/a/b/c"), false);
+        }))
+        .is_err());
+
+        fs::remove_dir_all("./test/a/b/c").unwrap();
+        fs::remove_dir_all(LIT_DIR).unwrap();
     }
 }

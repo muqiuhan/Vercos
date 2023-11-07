@@ -22,12 +22,12 @@ use crate::error;
 use crate::error::Log;
 use crate::repo::Repo;
 use flate2::read::ZlibDecoder;
-use std::io::Read;
 use flate2::write::ZlibEncoder;
 use flate2::Compression;
 use sha1::{Digest, Sha1};
 use std::fs;
 use std::io::prelude::*;
+use std::io::Read;
 
 pub trait Object {
     fn to_string(&self) -> String;
