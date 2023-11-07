@@ -16,24 +16,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-use crate::error::Log;
+use super::Object;
 
-#[derive(Debug)]
-#[allow(clippy::enum_variant_names)]
-pub enum Object {
-    Malformed(String, usize),
-    UnknownType(String, String),
+/// Blobs are user data: the content of every file you put in lit (main.c, logo.png, README.md) is stored as a blob.
+struct Blob {
+    fmt: String,
 }
 
-impl Log for Object {
-    fn fmt(&self) -> String {
-        match self {
-            Object::Malformed(sha, len) => {
-                format!("Malformed object `{}`: bad length `{}`", sha, len)
-            }
-            Object::UnknownType(typ, sha) => {
-                format!("Unknown type `{}` for object `{}`", typ, sha)
-            }
-        }
+impl Object for Blob {
+    fn to_string(&self) -> String {
+        todo!()
+    }
+
+    fn deserialize(data: &String) -> Self
+    where
+        Self: Sized,
+    {
+        todo!()
+    }
+
+    fn serialize(&self) -> &[u8] {
+        todo!()
+    }
+
+    fn fmt(&self) -> &String {
+        &self.fmt
     }
 }
