@@ -19,8 +19,18 @@
 use super::Object;
 
 /// Blobs are user data: the content of every file you put in lit (main.c, logo.png, README.md) is stored as a blob.
-struct Blob {
+pub struct Blob {
     fmt: String,
+    data: String,
+}
+
+impl Blob {
+    pub fn new() -> Self {
+        Blob {
+            fmt: "Blob".to_string(),
+            data: String::new(),
+        }
+    }
 }
 
 impl Object for Blob {
@@ -32,11 +42,14 @@ impl Object for Blob {
     where
         Self: Sized,
     {
-        todo!()
+        Blob {
+            data: data.clone(),
+            ..Blob::new()
+        }
     }
 
     fn serialize(&self) -> &[u8] {
-        todo!()
+        &self.data.as_bytes()
     }
 
     fn fmt(&self) -> &String {

@@ -49,11 +49,11 @@ pub fn read<T>(repo: Repo, sha: &String) -> Option<Box<dyn Object>> {
             error::object::Object::Malformed(sha.clone(), size).panic();
         } else {
             match fmt {
-                "commit" => Commit(&raw[y + 1..]),
-                "tree" => Tree(&raw[y + 1..]),
-                "tag" => Tag(&raw[y + 1..]),
-                "blob" => Box::new(Blob::deserialize(&raw[y + 1..].to_string())),
-                typ => error::object::Object::UnknownType(typ.to_string(), sha.clone()),
+                // "commit" => Commit(&raw[y + 1..]),
+                // "tree" => Tree(&raw[y + 1..]),
+                // "tag" => Tag(&raw[y + 1..]),
+                "blob" => Some(Box::new(Blob::deserialize(&raw[y + 1..].to_string()))),
+                typ => error::object::Object::UnknownType(typ.to_string(), sha.clone()).panic(),
             }
         }
     }
