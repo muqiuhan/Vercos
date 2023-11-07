@@ -23,8 +23,6 @@ use crate::repo::Repo;
 use flate2::read::ZlibDecoder;
 use std::io::Read;
 
-
-
 /// Read object sha from lit repository repo.
 /// Return a Object whose exact type depends on the object.
 pub fn read(repo: Repo, sha: &String) -> Option<Box<dyn Object>> {

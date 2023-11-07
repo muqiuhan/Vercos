@@ -28,5 +28,14 @@ pub fn command(args: &CommandLineParser) {
             init::Init::create(path.clone(), *force);
             info!("create ok!");
         }
+
+        CommandLineParser::CatFile { typ, object } => {
+            info!("get the content of repository objects `{}`", object);
+            (cat_file::CatFile {
+                typ: typ.clone(),
+                object: object.clone(),
+            })
+            .cat()
+        }
     }
 }
