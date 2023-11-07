@@ -22,11 +22,12 @@ use crate::object::{blob::Blob, Object};
 use crate::repo::Repo;
 use flate2::read::ZlibDecoder;
 use std::io::Read;
-use std::path::PathBuf;
+
+
 
 /// Read object sha from lit repository repo.
 /// Return a Object whose exact type depends on the object.
-pub fn read<T>(repo: Repo, sha: &String) -> Option<Box<dyn Object>> {
+pub fn read(repo: Repo, sha: &String) -> Option<Box<dyn Object>> {
     let path = Repo::repo_file(&repo.lit_dir, &["objects", &sha[0..2], &sha[2..]], false).unwrap();
 
     if !(path.is_file()) {
@@ -52,7 +53,7 @@ pub fn read<T>(repo: Repo, sha: &String) -> Option<Box<dyn Object>> {
                 // "commit" => Commit(&raw[y + 1..]),
                 // "tree" => Tree(&raw[y + 1..]),
                 // "tag" => Tag(&raw[y + 1..]),
-                "blob" => Some(Box::new(Blob::deserialize(&raw[y + 1..].to_string()))),
+                "blob" => Some(Box::new(Blob::deserialize(&raw[y + 1..]))),
                 typ => error::object::Object::UnknownType(typ.to_string(), sha.clone()).panic(),
             }
         }
@@ -72,9 +73,9 @@ pub fn test_read() {
 
     // Read the object type
     let x = raw.find(' ').unwrap();
-    let fmt = &raw[0..x];
+    let _fmt = &raw[0..x];
 
     // Read and validate object size
     let y = raw[x..].find('\x00').unwrap();
-    let size = &raw[x..y].to_string();
+    let _size = &raw[x..y].to_string();
 }

@@ -24,7 +24,7 @@ use sha1::{Digest, Sha1};
 use std::fs;
 use std::io::prelude::*;
 
-pub fn write<T>(object: &Box<dyn Object>, repo: Option<Repo>) -> String {
+pub fn write(object: &Box<dyn Object>, repo: Option<Repo>) -> String {
     let data = object.serialize();
     let result = format!(
         "{}  {}\x00{}",
