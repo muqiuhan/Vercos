@@ -116,22 +116,29 @@ mod test {
     use std::{io::Read, path::PathBuf};
 
     #[test]
-    pub fn test_read() {
-        let path = PathBuf::from(".git/objects/1d/b99e919e2087dad777c3e088bf97deef862666");
+    pub fn test_read_blob() {
+        let path = PathBuf::from("./assests/blob_object");
         let raw = {
-            let mut str = String::new();
+            let mut vec = Vec::new();
             ZlibDecoder::new(std::fs::read(path).unwrap().as_slice())
-                .read_to_string(&mut str)
+                .read_to_end(&mut vec)
                 .unwrap();
-            str
+
+            vec
         };
 
-        // Read the object type
-        let x = raw.find(' ').unwrap();
-        let _fmt = &raw[0..x];
+        let x = raw.iter().position(|byte| *byte == 0x20u8).unwrap();
+        let fmt = std::str::from_utf8(&raw[0..x]).unwrap();
 
-        // Read and validate object size
-        let y = raw[x..].find('\x00').unwrap();
-        let _size = &raw[x..y].to_string();
+        let y = &raw[x..].iter().position(|byte| *byte == 0x00).unwrap();
+        let size = std::str::from_utf8(&raw[x + 1..x + y])
+            .unwrap()
+            .parse::<usize>()
+            .unwrap();
+
+        assert_eq!(x, 4);
+        assert_eq!(*y, 5);
+        assert_eq!(fmt, "blob");
+        assert_eq!(size, 1505);
     }
 }

@@ -18,7 +18,7 @@
 
 mod path;
 
-use crate::error::{self, Error, Log};
+use crate::error::{self, Log};
 use crate::r#const::LIT_DIR;
 use ini::Ini;
 use std::path::{Path, PathBuf};
@@ -68,9 +68,7 @@ impl Repo {
             .to_string();
 
         if repositoryformatversion != "0" {
-            Err(Error::Repo(
-                error::repo::Repo::UnsupportedRepositoryFormatVersion(repositoryformatversion),
-            ))
+            error::repo::Repo::UnsupportedRepositoryFormatVersion(repositoryformatversion).panic()
         } else {
             Ok(())
         }

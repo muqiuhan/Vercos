@@ -22,6 +22,7 @@ pub mod repo;
 pub type Result<T> = std::result::Result<T, Error>;
 
 #[derive(Debug)]
+#[allow(dead_code)]
 pub enum Error {
     Repo(repo::Repo),
     Object(object::Object),
