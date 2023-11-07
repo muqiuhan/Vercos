@@ -44,7 +44,7 @@ pub trait Object {
 
 /// Read object sha from lit repository repo.
 /// Return a Object whose exact type depends on the object.
-pub fn read(repo: Repo, sha: &str) -> Option<Box<dyn Object>> {
+pub fn read(repo: &Repo, sha: &str) -> Option<Box<dyn Object>> {
     let path = Repo::repo_file(&repo.lit_dir, &["objects", &sha[0..2], &sha[2..]], false).unwrap();
 
     if !(path.is_file()) {
