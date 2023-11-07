@@ -20,9 +20,9 @@ mod blob;
 mod reading;
 mod writing;
 
-trait Object {
+pub trait Object {
     fn to_string(&self) -> String;
-    fn deserialize(data: &String) -> Self
+    fn deserialize(data: &str) -> Self
     where
         Self: Sized;
 

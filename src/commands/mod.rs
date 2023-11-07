@@ -18,6 +18,7 @@
 
 use crate::cli::CommandLineParser;
 
+pub mod cat_file;
 pub mod init;
 
 pub fn command(args: &CommandLineParser) {

@@ -58,11 +58,11 @@ impl Init {
 
         if repo.worktree.exists() {
             if !(worktree.is_dir()) {
-                error::Repo::NotDirectory(worktree.clone()).panic()
+                error::repo::Repo::NotDirectory(worktree.clone()).panic()
             }
 
             if (lit_dir.exists()) && (lit_dir.read_dir().unwrap().next().is_some()) && (!force) {
-                error::Repo::NotEmpty(worktree.clone()).panic()
+                error::repo::Repo::NotEmpty(worktree.clone()).panic()
             }
         } else {
             fs::create_dir_all(worktree).unwrap();

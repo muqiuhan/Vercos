@@ -38,18 +38,18 @@ impl Object for Blob {
         todo!()
     }
 
-    fn deserialize(data: &String) -> Self
+    fn deserialize(data: &str) -> Self
     where
         Self: Sized,
     {
         Blob {
-            data: data.clone(),
+            data: data.to_string(),
             ..Blob::new()
         }
     }
 
     fn serialize(&self) -> &[u8] {
-        &self.data.as_bytes()
+        self.data.as_bytes()
     }
 
     fn fmt(&self) -> &String {

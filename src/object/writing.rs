@@ -33,10 +33,10 @@ pub fn write<T>(object: &Box<dyn Object>, repo: Option<Repo>) -> String {
         std::str::from_utf8(data).unwrap()
     );
 
-    let sha: &str = {
+    let sha = {
         let mut hasher = Sha1::new();
         hasher.update(result.as_bytes());
-        std::str::from_utf8(&hasher.finalize()).unwrap()
+        std::str::from_utf8(&hasher.finalize()).unwrap().to_string()
     };
 
     repo.iter().for_each(|repo| {
@@ -47,7 +47,7 @@ pub fn write<T>(object: &Box<dyn Object>, repo: Option<Repo>) -> String {
             fs::write(path, {
                 let mut compress = ZlibEncoder::new(Vec::new(), Compression::default());
 
-                compress.write_all(&sha.as_bytes()).unwrap();
+                compress.write_all(sha.as_bytes()).unwrap();
                 compress.finish().unwrap()
             })
             .unwrap();
