@@ -23,9 +23,23 @@ pub enum CommandLineParser {
         typ: String,
 
         /// The object to display
-        #[structopt(name = "object")]
+        #[structopt]
         object: String,
     },
+
+    /// Compute object ID and optionally create an object from a file
+    HashObject {
+        /// write the object into the object database
+        #[structopt(short)]
+        write: bool,
+
+        /// Specify the type (blob | commit | tag | tree)
+        #[structopt(default_value = "blob", name = "type", short)]
+        typ: String,
+
+        #[structopt]
+        path: String,
+    }
 }
 
 impl CommandLineParser {

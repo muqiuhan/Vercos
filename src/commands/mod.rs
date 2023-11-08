@@ -20,22 +20,20 @@ use crate::cli::CommandLineParser;
 
 pub mod cat_file;
 pub mod init;
+mod hash_object;
 
-pub fn command(args: &CommandLineParser) {
+pub fn command(args: CommandLineParser) {
     match args {
-        CommandLineParser::Init { path, force } => {
-            info!("create lit repository on {}...", path);
-            init::Init::create(path.clone(), *force);
-            info!("create ok!");
+        CommandLineParser::Init { force, path } => {
+            CommandLineParser::Init { force, path }.init();
         }
 
         CommandLineParser::CatFile { typ, object } => {
-            info!("get the content of repository objects `{}`", object);
-            (cat_file::CatFile {
-                typ: typ.clone(),
-                object: object.clone(),
-            })
-            .cat()
+            CommandLineParser::CatFile { typ, object }.cat()
+        }
+
+        CommandLineParser::HashObject { typ, write, path } => {
+            CommandLineParser::HashObject { typ, write, path }.hash();
         }
     }
 }

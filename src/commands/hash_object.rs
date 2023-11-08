@@ -16,12 +16,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-use crate::{object};
+
 use crate::cli::CommandLineParser;
 
-impl CommandLineParser::CatFile {
-    pub fn cat(&self) {
-        info!("get the content of repository objects `{}`", object);
-        object::operation::cat(&self)
+impl CommandLineParser::HashObject {
+    pub fn hash(&self) {
+
     }
 }
