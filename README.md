@@ -2,13 +2,13 @@
 
 <img src="./.github/logo.png" height="150px">
 
-# Lit
+<h1> Lit </h1>
 
-*A minimalism cross-platform git-like version control system written in Rust*
+<p> A minimalism cross-platform git-like version control system written in Rust </p>
 
-![](https://github.com/muqiuhan/lit/actions/workflows/ci.yaml/badge.svg) 
+<img src="https://github.com/muqiuhan/lit/actions/workflows/ci.yaml/badge.svg">
 
-🚧 Working In Progress.
+<p> <mark> 🚧 Working In Progress. </mark> </p>
 
 </div>
 
