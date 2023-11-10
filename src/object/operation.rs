@@ -58,7 +58,7 @@ pub fn write(object: Box<dyn Object>, repo: Option<Repo>) -> String {
 
     let sha = {
         let mut hasher = Sha1::new();
-        hasher.update(result);
+        hasher.update(&result);
         format!("{:x}", hasher.finalize())
     };
 
@@ -70,7 +70,7 @@ pub fn write(object: Box<dyn Object>, repo: Option<Repo>) -> String {
             fs::write(path, {
                 let mut compress = ZlibEncoder::new(Vec::new(), Compression::default());
 
-                compress.write_all(sha.as_bytes()).unwrap();
+                compress.write_all(result.as_bytes()).unwrap();
                 compress.finish().unwrap()
             })
             .unwrap();
@@ -101,9 +101,9 @@ mod test {
     use crate::object::blob::Blob;
     use crate::object::operation::write;
     use crate::repo;
+
     use flate2::bufread::ZlibDecoder;
-    use core::time;
-    use std::{fs, io::Read, path::PathBuf, thread::sleep};
+    use std::{fs, io::Read, path::PathBuf};
 
     #[test]
     pub fn test_read_blob() {
@@ -144,8 +144,6 @@ mod test {
 
         assert_eq!("1f517e2accc0ef9e6effab891b037bd9659ea7cd", sha1.as_str());
         assert!(PathBuf::from(".lit/objects/1f/517e2accc0ef9e6effab891b037bd9659ea7cd").exists());
-
-        sleep(time::Duration::from_secs(10));
 
         fs::remove_dir_all(".lit").unwrap();
     }

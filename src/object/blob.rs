@@ -38,7 +38,7 @@ impl Object for Blob {
         self.data.clone()
     }
 
-    fn deserialize(object: &str) -> Self
+    fn deserialize(_object: &str) -> Self
     where
         Self: Sized,
     {
