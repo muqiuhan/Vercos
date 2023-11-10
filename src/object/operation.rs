@@ -1,4 +1,4 @@
-
+use crate::commands::cat_file::CatFile;
 use crate::error;
 use crate::error::Log;
 use crate::object::{blob, Object};
@@ -10,7 +10,6 @@ use sha1::{Digest, Sha1};
 use std::fs;
 use std::io::prelude::*;
 use std::io::Read;
-use crate::commands::cat_file::CatFile;
 
 /// Read object sha from lit repository repo.
 /// Return a Object whose exact type depends on the object.
@@ -47,10 +46,11 @@ pub fn read(repo: &Repo, sha: &str) -> Option<Box<dyn Object>> {
     }
 }
 
-pub fn write(object: &dyn Object, repo: Option<Repo>) -> String {
+pub fn write(object: Box<dyn Object>, repo: Option<Repo>) -> String {
     let data = object.serialize();
+
     let result = format!(
-        "{}  {}\x00{}",
+        "{} {}\0x00{}",
         object.fmt(),
         &data.len(),
         std::str::from_utf8(data).unwrap()
@@ -58,8 +58,8 @@ pub fn write(object: &dyn Object, repo: Option<Repo>) -> String {
 
     let sha = {
         let mut hasher = Sha1::new();
-        hasher.update(result.as_bytes());
-        std::str::from_utf8(&hasher.finalize()).unwrap().to_string()
+        hasher.update(result);
+        format!("{:x}", hasher.finalize())
     };
 
     repo.iter().for_each(|repo| {
@@ -97,8 +97,13 @@ pub fn cat(args: &CatFile) {
 
 #[cfg(test)]
 mod test {
+    use crate::commands::init::Init;
+    use crate::object::blob::Blob;
+    use crate::object::operation::write;
+    use crate::repo;
     use flate2::bufread::ZlibDecoder;
-    use std::{io::Read, path::PathBuf};
+    use core::time;
+    use std::{fs, io::Read, path::PathBuf, thread::sleep};
 
     #[test]
     pub fn test_read_blob() {
@@ -128,5 +133,20 @@ mod test {
     }
 
     #[test]
-    pub fn test_write_blob() {}
+    pub fn test_write_blob() {
+        let repo = repo::Repo::create(&Init {
+            force: false,
+            path: String::from("."),
+        });
+
+        let object = Blob::new("Ok, this is a blob object".to_string());
+        let sha1 = write(Box::new(object), Some(repo));
+
+        assert_eq!("1f517e2accc0ef9e6effab891b037bd9659ea7cd", sha1.as_str());
+        assert!(PathBuf::from(".lit/objects/1f/517e2accc0ef9e6effab891b037bd9659ea7cd").exists());
+
+        sleep(time::Duration::from_secs(10));
+
+        fs::remove_dir_all(".lit").unwrap();
+    }
 }

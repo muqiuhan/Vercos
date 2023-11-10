@@ -19,11 +19,6 @@
 mod blob;
 pub mod operation;
 
-
-
-
-
-
 pub trait Object {
     fn to_string(&self) -> String;
     fn deserialize(data: &str) -> Self

@@ -16,11 +16,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+use crate::commands::init::Init;
 use crate::error;
 use crate::error::Log;
 use crate::repo::Repo;
 use std::fs;
-use crate::commands::init::Init;
 
 impl Repo {
     pub fn create(args: &Init) -> Repo {

@@ -25,27 +25,24 @@ pub struct Blob {
 }
 
 impl Blob {
-    pub fn new() -> Self {
+    pub fn new(data: String) -> Self {
         Blob {
-            fmt: "Blob".to_string(),
-            data: String::new(),
+            fmt: "blob".to_string(),
+            data,
         }
     }
 }
 
 impl Object for Blob {
     fn to_string(&self) -> String {
-        todo!()
+        self.data.clone()
     }
 
-    fn deserialize(data: &str) -> Self
+    fn deserialize(object: &str) -> Self
     where
         Self: Sized,
     {
-        Blob {
-            data: data.to_string(),
-            ..Blob::new()
-        }
+        unimplemented!()
     }
 
     fn serialize(&self) -> &[u8] {
