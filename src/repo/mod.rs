@@ -16,8 +16,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-mod path;
 pub mod create;
+mod path;
 
 use crate::error::{self, Log};
 use crate::r#const::LIT_DIR;

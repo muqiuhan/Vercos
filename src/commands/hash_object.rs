@@ -16,11 +16,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+/// Compute object ID and optionally create an object from a file
+pub struct HashObject {
+    /// write the object into the object database
+    pub write: bool,
 
-use crate::cli::CommandLineParser;
+    /// Specify the type (blob | commit | tag | tree)
+    pub typ: String,
 
-impl CommandLineParser::HashObject {
-    pub fn hash(&self) {
+    pub path: String,
+}
 
-    }
+impl HashObject {
+    pub fn hash(&self) {}
 }

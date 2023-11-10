@@ -19,10 +19,10 @@
 mod blob;
 pub mod operation;
 
-use crate::error::Log;
-use sha1::Digest;
-use std::io::prelude::*;
-use std::io::Read;
+
+
+
+
 
 pub trait Object {
     fn to_string(&self) -> String;

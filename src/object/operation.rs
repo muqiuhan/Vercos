@@ -1,5 +1,7 @@
+
 use crate::error;
 use crate::error::Log;
+use crate::object::{blob, Object};
 use crate::repo::Repo;
 use flate2::read::ZlibDecoder;
 use flate2::write::ZlibEncoder;
@@ -8,8 +10,7 @@ use sha1::{Digest, Sha1};
 use std::fs;
 use std::io::prelude::*;
 use std::io::Read;
-use crate::cli::CommandLineParser;
-use crate::object::{blob, Object};
+use crate::commands::cat_file::CatFile;
 
 /// Read object sha from lit repository repo.
 /// Return a Object whose exact type depends on the object.
@@ -72,7 +73,7 @@ pub fn write(object: &dyn Object, repo: Option<Repo>) -> String {
                 compress.write_all(sha.as_bytes()).unwrap();
                 compress.finish().unwrap()
             })
-                .unwrap();
+            .unwrap();
         }
     });
 
@@ -86,7 +87,7 @@ fn object_find(_repo: &Repo, name: &String, _fmt: &String, _follow: bool) -> Str
     name.clone()
 }
 
-pub fn cat(args: CommandLineParser::CatFile) {
+pub fn cat(args: &CatFile) {
     let repo = Repo::repo_find(&".".to_owned(), true).unwrap();
     let _object = read(
         &repo,
@@ -127,7 +128,5 @@ mod test {
     }
 
     #[test]
-    pub fn test_write_blob() {
-
-    }
+    pub fn test_write_blob() {}
 }

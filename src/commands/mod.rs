@@ -17,23 +17,24 @@
  */
 
 use crate::cli::CommandLineParser;
+use crate::commands::cat_file::CatFile;
+use crate::commands::hash_object::HashObject;
+use crate::commands::init::Init;
 
 pub mod cat_file;
-pub mod init;
 mod hash_object;
+pub mod init;
 
 pub fn command(args: CommandLineParser) {
     match args {
         CommandLineParser::Init { force, path } => {
-            CommandLineParser::Init { force, path }.init();
+            Init { force, path }.init();
         }
 
-        CommandLineParser::CatFile { typ, object } => {
-            CommandLineParser::CatFile { typ, object }.cat()
-        }
+        CommandLineParser::CatFile { typ, object } => CatFile { typ, object }.cat(),
 
         CommandLineParser::HashObject { typ, write, path } => {
-            CommandLineParser::HashObject { typ, write, path }.hash();
+            HashObject { typ, write, path }.hash();
         }
     }
 }

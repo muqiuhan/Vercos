@@ -16,13 +16,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-use crate::cli::CommandLineParser;
+
 use crate::repo;
 
-impl CommandLineParser::Init {
+pub struct Init {
+    /// Force initialization
+    pub force: bool,
+
+    /// The repository path, defaults to the current directory (.)
+    pub path: String,
+}
+
+impl Init {
     pub fn init(&self) {
-        info!("create lit repository on {}...", path);
-        repo::Repo::create(&self);
+        info!("create lit repository on {}...", self.path);
+        repo::Repo::create(self);
         info!("create ok!");
     }
 }

@@ -23,7 +23,7 @@ pub enum CommandLineParser {
         typ: String,
 
         /// The object to display
-        #[structopt]
+        #[structopt(name = "object")]
         object: String,
     },
 
@@ -37,9 +37,9 @@ pub enum CommandLineParser {
         #[structopt(default_value = "blob", name = "type", short)]
         typ: String,
 
-        #[structopt]
+        #[structopt(name = "path")]
         path: String,
-    }
+    },
 }
 
 impl CommandLineParser {

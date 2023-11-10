@@ -16,14 +16,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-use crate::repo::Repo;
 use crate::error;
 use crate::error::Log;
+use crate::repo::Repo;
 use std::fs;
-use crate::cli::CommandLineParser;
+use crate::commands::init::Init;
 
 impl Repo {
-    pub fn create(args: &CommandLineParser::Init) -> Repo {
+    pub fn create(args: &Init) -> Repo {
         let repo = Repo::new(&args.path, !args.force);
 
         info!(
@@ -74,13 +74,13 @@ impl Repo {
             Repo::repo_file(&repo.lit_dir, &["description"], false).unwrap(),
             "Unnamed repository; edit this file 'description' to name the repository.\n",
         )
-            .unwrap();
+        .unwrap();
 
         fs::write(
             Repo::repo_file(&repo.lit_dir, &["HEAD"], false).unwrap(),
             "ref: refs/heads/master\n",
         )
-            .unwrap();
+        .unwrap();
     }
 
     fn create_config(repo: &Repo) {

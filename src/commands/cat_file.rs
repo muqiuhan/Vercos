@@ -16,12 +16,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-use crate::{object};
-use crate::cli::CommandLineParser;
+use crate::object;
 
-impl CommandLineParser::CatFile {
+/// Provide contents or details of repository objects
+pub struct CatFile {
+    /// Specify the type (blob | commit | tag | tree)
+    pub typ: String,
+
+    /// The object to display
+    pub object: String,
+}
+
+impl CatFile {
     pub fn cat(&self) {
-        info!("get the content of repository objects `{}`", object);
-        object::operation::cat(&self)
+        info!("get the content of repository objects `{}`", self.object);
+        object::operation::cat(self)
     }
 }
