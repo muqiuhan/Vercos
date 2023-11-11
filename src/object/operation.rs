@@ -19,27 +19,33 @@ pub fn read(repo: &Repo, sha: &str) -> Option<Box<dyn Object>> {
     if !(path.is_file()) {
         None
     } else {
-        let mut raw = String::new();
+        let mut raw = Vec::new();
         ZlibDecoder::new(std::fs::read(path).unwrap().as_slice())
-            .read_to_string(&mut raw)
+            .read_to_end(&mut raw)
             .unwrap();
 
         // Read the object type
-        let x = raw.find(' ').unwrap();
-        let fmt = &raw[0..x];
+        let x = raw.iter().position(|byte| *byte == 0x20u8).unwrap();
+        let fmt = std::str::from_utf8(&raw[0..x]).unwrap();
 
         // Read and validate object size
-        let y = raw[x..].find('\x00').unwrap();
-        let size = raw[x..y].parse::<usize>().unwrap();
+        let y = raw[x..].iter().position(|byte| *byte == 0x00u8).unwrap();
+        let size = std::str::from_utf8(&raw[x + 1..x + y])
+            .unwrap()
+            .parse::<usize>()
+            .unwrap();
 
-        if size != raw.len() - y - 1 {
+        // X itself occupied one bit
+        if size != raw.len() - (x + y + 1) {
             error::object::Object::Malformed(sha.to_owned(), size).panic();
         } else {
             match fmt {
                 // "commit" => Commit(&raw[y + 1..]),
                 // "tree" => Tree(&raw[y + 1..]),
                 // "tag" => Tag(&raw[y + 1..]),
-                "blob" => Some(Box::new(blob::Blob::deserialize(&raw[y + 1..]))),
+                "blob" => Some(Box::new(blob::Blob::deserialize(
+                    std::str::from_utf8(&raw[x + y + 1..]).unwrap(),
+                ))),
                 typ => error::object::Object::UnknownType(typ.to_string(), sha.to_owned()).panic(),
             }
         }
@@ -50,7 +56,7 @@ pub fn write(object: Box<dyn Object>, repo: Option<Repo>) -> String {
     let data = object.serialize();
 
     let result = format!(
-        "{} {}\0x00{}",
+        "{} {}\0{}",
         object.fmt(),
         &data.len(),
         std::str::from_utf8(data).unwrap()
@@ -83,27 +89,30 @@ pub fn write(object: Box<dyn Object>, repo: Option<Repo>) -> String {
 /// The reason for this strange small function is that
 /// lit has a lot of ways to refer to objects: full hash, short hash, tags...
 /// This function is the name resolution function.
-fn object_find(_repo: &Repo, name: &String, _fmt: &String, _follow: bool) -> String {
+fn find(repo: &Repo, name: &String, fmt: &String, follow: bool) -> String {
     name.clone()
 }
 
-pub fn cat(args: &CatFile) {
+pub fn cat(args: &CatFile) -> String {
     let repo = Repo::repo_find(&".".to_owned(), true).unwrap();
-    let _object = read(
-        &repo,
-        object_find(&repo, &args.object, &args.typ, true).as_str(),
-    );
+    let object = read(&repo, find(&repo, &args.object, &args.typ, true).as_str()).unwrap();
+    std::str::from_utf8(object.serialize()).unwrap().to_string()
 }
 
 #[cfg(test)]
 mod test {
-    use crate::commands::init::Init;
+    use crate::commands::cat_file::CatFile;
+    use crate::commands::{cat_file, init::Init};
     use crate::object::blob::Blob;
     use crate::object::operation::write;
     use crate::repo;
 
     use flate2::bufread::ZlibDecoder;
+    use std::thread::sleep;
+    use std::time::Duration;
     use std::{fs, io::Read, path::PathBuf};
+
+    use super::cat;
 
     #[test]
     pub fn test_read_blob() {
@@ -134,6 +143,8 @@ mod test {
 
     #[test]
     pub fn test_write_blob() {
+        // Prevent directory from being deleted
+        let _ = fs::remove_dir_all(".lit");
         let repo = repo::Repo::create(&Init {
             force: false,
             path: String::from("."),
@@ -142,9 +153,30 @@ mod test {
         let object = Blob::new("Ok, this is a blob object".to_string());
         let sha1 = write(Box::new(object), Some(repo));
 
-        assert_eq!("1f517e2accc0ef9e6effab891b037bd9659ea7cd", sha1.as_str());
-        assert!(PathBuf::from(".lit/objects/1f/517e2accc0ef9e6effab891b037bd9659ea7cd").exists());
+        assert_eq!("9ca6e1d93dfc2343e4e404a6b742220b148649a0", sha1.as_str());
+        assert!(PathBuf::from(".lit/objects/9c/a6e1d93dfc2343e4e404a6b742220b148649a0").exists());
+        fs::remove_dir_all(".lit").unwrap();
+    }
+
+    #[test]
+    pub fn test_cat_file() {
+        // Prevent directory from being deleted
+        let _ = fs::remove_dir_all(".lit");
+
+        let repo = repo::Repo::create(&Init {
+            force: false,
+            path: String::from("."),
+        });
+
+        let object = Blob::new("Ok, this is a blob object".to_string());
+        let sha1 = write(Box::new(object), Some(repo));
+
+        let content = cat(&CatFile {
+            typ: "blob".to_string(),
+            object: sha1,
+        });
 
         fs::remove_dir_all(".lit").unwrap();
+        assert_eq!("Ok, this is a blob object".to_string(), content);
     }
 }
