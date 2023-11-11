@@ -23,7 +23,7 @@ use std::path::PathBuf;
 #[allow(clippy::enum_variant_names)]
 pub enum Repo {
     NotLitRepo(PathBuf),
-    CannotFindLitRepo(PathBuf),
+    CannotFindLitRepo,
     NotDirectory(PathBuf),
     NotEmpty(PathBuf),
     MissingConfigFile(PathBuf),
@@ -34,10 +34,7 @@ impl Log for Repo {
     fn fmt(&self) -> String {
         match self {
             Repo::NotLitRepo(dir) => format!("`{}` is not a lit repository", dir.to_str().unwrap()),
-            Repo::CannotFindLitRepo(dir) => format!(
-                "Cannot find lit repository from `{}` to `/`",
-                dir.to_str().unwrap()
-            ),
+            Repo::CannotFindLitRepo => format!("Cannot find lit repository at current path"),
             Repo::NotDirectory(dir) => format!("`{}` is not a directory", dir.to_str().unwrap()),
             Repo::NotEmpty(dir) => {
                 format!("The directory `{}` is not empty", dir.to_str().unwrap())

@@ -38,11 +38,11 @@ impl Object for Blob {
         self.data.clone()
     }
 
-    fn deserialize(_object: &str) -> Self
+    fn deserialize(object: &str) -> Self
     where
         Self: Sized,
     {
-        unimplemented!()
+        Self::new(object.to_string())
     }
 
     fn serialize(&self) -> &[u8] {

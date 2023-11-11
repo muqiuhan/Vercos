@@ -72,7 +72,7 @@ impl crate::repo::Repo {
             // At root directory (`/.. == /`)
             if parent.eq(&path) {
                 if required {
-                    error::repo::Repo::CannotFindLitRepo(path).panic();
+                    error::repo::Repo::CannotFindLitRepo.panic()
                 } else {
                     None
                 }

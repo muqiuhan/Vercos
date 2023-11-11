@@ -30,6 +30,6 @@ pub struct CatFile {
 impl CatFile {
     pub fn cat(&self) {
         info!("get the content of repository objects `{}`", self.object);
-        object::operation::cat(self)
+        println!("{}", object::operation::cat(self))
     }
 }
