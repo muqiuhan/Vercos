@@ -63,6 +63,24 @@ SUBCOMMANDS:
     init        Create an empty lit repository or reinitialize an existing one
 ```
 
+
+## FAQ
+
+### Packfiles?
+
+Lit just implemented __loose objects__. Git has a second object storage mechanism called __packfile__. The Packfiles are much more efficient, but more complex tan loose objects.
+
+A packfile is a compilation of loose objects (like a tar) but some are stored as deltas (as transformation of another object).
+
+In Git, the packfile is stored in `.git/objects/pack`, it has a `.pack` extension, and is accompanied by an index file of the same name with the `idx` extension.
+
+If you want to convert a packfile to loose objects format (to play with lit on an existing repo), here is the solution:
+
+1. Move the packfile outside the gitdir:
+	> `mv .git/objects/pack/pack-xxxxxx.pack .`
+2. Cat it and pipe the result to `git unpack-objects`
+	> `cat pack-xxxxx.pack | git unpack-objects`
+
 ## Progress
 
 - [ ] add                   Add file contents to the index
@@ -71,7 +89,7 @@ SUBCOMMANDS:
 - [ ] rm                    Remove files from the working tree and from the index
 - [ ] tagging               Create, list, delete or verify a tag object signed with GPG
 - [ ] status                Show the working tree status
-- [ ] cat-file              Provide content or type and size information for repository objects
+- [x] cat-file              Provide content or type and size information for repository objects
 - [ ] check-ignore          Debug gitignore / exclude files
 - [ ] checkout              Switch branches or restore working tree files
 - [ ] commit                Record changes to the repository
