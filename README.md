@@ -93,7 +93,7 @@ If you want to convert a packfile to loose objects format (to play with lit on a
 - [ ] check-ignore          Debug gitignore / exclude files
 - [ ] checkout              Switch branches or restore working tree files
 - [ ] commit                Record changes to the repository
-- [ ] hash-object           Compute object ID and optionally create an object from a file
+- [x] hash-object           Compute object ID and optionally create an object from a file
 - [ ] ls-files              Show information about files in the index and the working tree
 - [ ] ls-tree               List the contents of a tree object
 - [ ] rev-parse             Pick out and massage parameters

@@ -89,8 +89,8 @@ pub fn write(object: Box<dyn Object>, repo: Option<Repo>) -> String {
 /// The reason for this strange small function is that
 /// lit has a lot of ways to refer to objects: full hash, short hash, tags...
 /// This function is the name resolution function.
-fn find(repo: &Repo, name: &String, fmt: &String, follow: bool) -> String {
-    name.clone()
+fn find(_repo: &Repo, name: &str, _fmt: &str, _follow: bool) -> String {
+    name.to_owned()
 }
 
 pub fn cat(args: &CatFile) -> String {
@@ -99,17 +99,29 @@ pub fn cat(args: &CatFile) -> String {
     std::str::from_utf8(object.serialize()).unwrap().to_string()
 }
 
+/// Hash object, writing it to repo if provided
+pub fn hash(file: &String, fmt: &str, repo: Option<Repo>) -> String {
+    let data = std::fs::read_to_string(file).unwrap();
+    let object = match fmt {
+        // "commit" => Commit(&raw[y + 1..]),
+        // "tree" => Tree(&raw[y + 1..]),
+        // "tag" => Tag(&raw[y + 1..]),
+        "blob" => Box::new(blob::Blob::new(data)),
+        typ => error::object::Object::UnknownType(typ.to_string(), file.to_owned()).panic(),
+    };
+
+    write(object, repo)
+}
+
 #[cfg(test)]
 mod test {
     use crate::commands::cat_file::CatFile;
-    use crate::commands::{cat_file, init::Init};
+    use crate::commands::init::Init;
     use crate::object::blob::Blob;
     use crate::object::operation::write;
     use crate::repo;
 
     use flate2::bufread::ZlibDecoder;
-    use std::thread::sleep;
-    use std::time::Duration;
     use std::{fs, io::Read, path::PathBuf};
 
     use super::cat;

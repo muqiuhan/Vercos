@@ -16,6 +16,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+use crate::object;
+use crate::repo::Repo;
+
 /// Compute object ID and optionally create an object from a file
 pub struct HashObject {
     /// write the object into the object database
@@ -28,5 +31,15 @@ pub struct HashObject {
 }
 
 impl HashObject {
-    pub fn hash(&self) {}
+    pub fn hash_object(&self) {
+        let repo = {
+            if self.write {
+                Repo::repo_find(&".".to_string(), true)
+            } else {
+                None
+            }
+        };
+
+        println!("{}", object::operation::hash(&self.path, &self.typ, repo))
+    }
 }

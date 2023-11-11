@@ -34,7 +34,7 @@ pub fn command(args: CommandLineParser) {
         CommandLineParser::CatFile { typ, object } => CatFile { typ, object }.cat(),
 
         CommandLineParser::HashObject { typ, write, path } => {
-            HashObject { typ, write, path }.hash();
+            HashObject { typ, write, path }.hash_object();
         }
     }
 }
